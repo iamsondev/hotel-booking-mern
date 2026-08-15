@@ -1,9 +1,29 @@
-// Express routes for managing rooms within hotels
+// Express routes for managing rooms within hotels (nested routes enabled with mergeParams)
 import express from 'express';
+import {
+  createRoom,
+  getRoomsByHotel,
+  getRoomById,
+  updateRoom,
+  deleteRoom,
+} from './room.controller.js';
+import protect from '../../middleware/protect.js';
+import authorize from '../../middleware/authorize.js';
+import isHotelOwnerOf from '../../middleware/isHotelOwnerOf.js';
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
-router.get('/', (req, res) => res.json({ message: 'Get rooms' }));
-router.post('/', (req, res) => res.json({ message: 'Add room to hotel' }));
+// Hotel nested routes (/api/hotels/:hotelId/rooms)
+router
+  .route('/')
+  .get(getRoomsByHotel)
+  .post(protect, authorize('hotelOwner', 'admin'), isHotelOwnerOf, createRoom);
+
+// Single room routes (/api/rooms/:id)
+router
+  .route('/:id')
+  .get(getRoomById)
+  .put(protect, authorize('hotelOwner', 'admin'), isHotelOwnerOf, updateRoom)
+  .delete(protect, authorize('hotelOwner', 'admin'), isHotelOwnerOf, deleteRoom);
 
 export default router;

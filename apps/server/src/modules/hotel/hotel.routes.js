@@ -11,11 +11,15 @@ import {
   approveHotel,
   rejectHotel,
 } from './hotel.controller.js';
+import roomRoutes from '../room/room.routes.js';
 import protect from '../../middleware/protect.js';
 import authorize from '../../middleware/authorize.js';
 import isHotelOwnerOf from '../../middleware/isHotelOwnerOf.js';
 
 const router = express.Router();
+
+// Re-route into room router for nested routes (/api/hotels/:hotelId/rooms)
+router.use('/:hotelId/rooms', roomRoutes);
 
 // Public Routes
 router.get('/', getAllHotels);

@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import { env } from './config/env.js';
 import authRoutes from './modules/auth/auth.routes.js';
 import hotelRoutes from './modules/hotel/hotel.routes.js';
+import roomRoutes from './modules/room/room.routes.js';
 import notFound from './middleware/notFound.js';
 import errorHandler from './middleware/errorHandler.js';
 
@@ -37,6 +38,7 @@ app.get('/health', (req, res) => {
 // Mount Feature Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/hotels', hotelRoutes);
+app.use('/api/rooms', roomRoutes);
 
 // Error Handling Middlewares (Must be mounted last)
 app.use(notFound);
