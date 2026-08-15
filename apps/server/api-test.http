@@ -1,0 +1,156 @@
+### Variables
+@baseUrl = http://localhost:5000/api
+@authToken = your_jwt_access_token_here
+@hotelId = your_hotel_id_here
+@roomId = your_room_id_here
+@bookingId = your_booking_id_here
+
+### Health Check
+GET http://localhost:5000/health
+
+### ---------------------------------------------------
+### AUTH ENDPOINTS
+### ---------------------------------------------------
+
+### Register User / Hotel Owner
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "name": "John Owner",
+  "email": "owner@example.com",
+  "password": "password123",
+  "role": "hotelOwner",
+  "phone": "+1234567890"
+}
+
+### Login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "owner@example.com",
+  "password": "password123"
+}
+
+### Refresh Token
+POST {{baseUrl}}/auth/refresh-token
+
+### Logout
+POST {{baseUrl}}/auth/logout
+
+### ---------------------------------------------------
+### HOTEL ENDPOINTS
+### ---------------------------------------------------
+
+### Create Hotel Listing
+POST {{baseUrl}}/hotels
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "name": "Grand Palace Resort",
+  "description": "Luxury 5-star seaside hotel with stunning views.",
+  "address": {
+    "street": "123 Beach Road",
+    "city": "Miami",
+    "state": "FL",
+    "country": "USA",
+    "zipCode": "33139"
+  },
+  "amenities": ["Pool", "WiFi", "Spa", "Gym", "Breakfast"],
+  "starRating": 5
+}
+
+### Get All Approved Hotels
+GET {{baseUrl}}/hotels?city=Miami&page=1&limit=10
+
+### Get Single Hotel by ID or Slug
+GET {{baseUrl}}/hotels/{{hotelId}}
+
+### Get Owner My Hotels
+GET {{baseUrl}}/hotels/owner/my-hotels
+Authorization: Bearer {{authToken}}
+
+### Admin Get Pending Hotels
+GET {{baseUrl}}/hotels/admin/pending
+Authorization: Bearer {{authToken}}
+
+### Admin Approve Hotel
+PATCH {{baseUrl}}/hotels/{{hotelId}}/approve
+Authorization: Bearer {{authToken}}
+
+### ---------------------------------------------------
+### ROOM ENDPOINTS
+### ---------------------------------------------------
+
+### Create Room under Hotel
+POST {{baseUrl}}/hotels/{{hotelId}}/rooms
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "roomType": "deluxe",
+  "pricePerNight": 150,
+  "capacity": {
+    "adults": 2,
+    "children": 1
+  },
+  "totalRooms": 10,
+  "amenities": ["Ocean View", "King Bed", "AC", "Minibar"]
+}
+
+### Get Rooms by Hotel
+GET {{baseUrl}}/hotels/{{hotelId}}/rooms
+
+### Get Single Room
+GET {{baseUrl}}/rooms/{{roomId}}
+
+### Soft Delete Room
+DELETE {{baseUrl}}/rooms/{{roomId}}
+Authorization: Bearer {{authToken}}
+
+### ---------------------------------------------------
+### BOOKING ENDPOINTS
+### ---------------------------------------------------
+
+### Create Booking Reservation
+POST {{baseUrl}}/bookings
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "roomId": "{{roomId}}",
+  "checkInDate": "2026-09-01",
+  "checkOutDate": "2026-09-05",
+  "numberOfGuests": {
+    "adults": 2,
+    "children": 0
+  },
+  "numberOfRooms": 1
+}
+
+### Get User Bookings
+GET {{baseUrl}}/bookings/my-bookings
+Authorization: Bearer {{authToken}}
+
+### Cancel Booking
+PATCH {{baseUrl}}/bookings/{{bookingId}}/cancel
+Authorization: Bearer {{authToken}}
+
+### ---------------------------------------------------
+### PAYMENT ENDPOINTS
+### ---------------------------------------------------
+
+### Create Stripe Payment Intent
+POST {{baseUrl}}/payments/create-intent
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "bookingId": "{{bookingId}}"
+}
+
+### Get Payment Details by Booking
+GET {{baseUrl}}/payments/booking/{{bookingId}}
+Authorization: Bearer {{authToken}}
