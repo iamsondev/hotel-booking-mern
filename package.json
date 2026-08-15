@@ -1,0 +1,12 @@
+{
+  "name": "hotel-booking-monorepo",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "apps/server",
+    "apps/client"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
