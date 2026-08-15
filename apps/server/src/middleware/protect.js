@@ -8,10 +8,10 @@ import { env } from '../config/env.js';
 export const protect = asyncHandler(async (req, res, next) => {
   let token;
 
-  if (req.cookies && req.cookies.jwt) {
-    token = req.cookies.jwt;
-  } else if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     token = req.headers.authorization.split(' ')[1];
+  } else if (req.cookies && req.cookies.jwt) {
+    token = req.cookies.jwt;
   }
 
   if (!token) {
@@ -21,11 +21,21 @@ export const protect = asyncHandler(async (req, res, next) => {
   try {
     const decoded = jwt.verify(token, env.JWT_SECRET);
     req.user = await User.findById(decoded.userId).select('-password');
+    
     if (!req.user) {
-      throw new ApiError(401, 'User no longer exists');
+      throw new ApiError(401, 'Not authorized, user no longer exists');
     }
+
     next();
   } catch (error) {
-    throw new ApiError(401, 'Not authorized, token failed');
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    if (error.name === 'CastError') {
+      throw new ApiError(400, 'Invalid user ID format in token');
+    }
+    throw new ApiError(401, 'Not authorized, token validation failed');
   }
 });
+
+export default protect;
