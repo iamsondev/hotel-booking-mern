@@ -3,6 +3,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import { env } from './config/env.js';
+import authRoutes from './modules/auth/auth.routes.js';
 import notFound from './middleware/notFound.js';
 import errorHandler from './middleware/errorHandler.js';
 
@@ -31,6 +32,9 @@ app.get('/health', (req, res) => {
     timestamp: new Date().toISOString(),
   });
 });
+
+// Mount Authentication Routes
+app.use('/api/auth', authRoutes);
 
 // Error Handling Middlewares (Must be mounted last)
 app.use(notFound);
