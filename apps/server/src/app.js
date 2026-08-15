@@ -3,16 +3,22 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import { env } from './config/env.js';
+
 import authRoutes from './modules/auth/auth.routes.js';
 import hotelRoutes from './modules/hotel/hotel.routes.js';
 import roomRoutes from './modules/room/room.routes.js';
 import bookingRoutes from './modules/booking/booking.routes.js';
+import paymentRoutes from './modules/payment/payment.routes.js';
+
 import notFound from './middleware/notFound.js';
 import errorHandler from './middleware/errorHandler.js';
 
 const app = express();
 
-// Global Middlewares
+// Stripe Webhook needs raw body parsing BEFORE express.json()
+app.use('/api/payments', paymentRoutes);
+
+// Global Middlewares (for rest of the API routes)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
