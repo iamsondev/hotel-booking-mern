@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import { env } from './config/env.js';
 import authRoutes from './modules/auth/auth.routes.js';
+import hotelRoutes from './modules/hotel/hotel.routes.js';
 import notFound from './middleware/notFound.js';
 import errorHandler from './middleware/errorHandler.js';
 
@@ -33,8 +34,9 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Mount Authentication Routes
+// Mount Feature Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/hotels', hotelRoutes);
 
 // Error Handling Middlewares (Must be mounted last)
 app.use(notFound);
