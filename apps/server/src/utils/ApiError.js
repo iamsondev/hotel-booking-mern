@@ -1,4 +1,4 @@
-// Custom Error class for operational API error handling
+// Custom Error class extending global Error for operational API errors
 
 class ApiError extends Error {
   constructor(statusCode, message, isOperational = true, stack = '') {
