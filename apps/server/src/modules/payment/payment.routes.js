@@ -1,9 +1,19 @@
 // Express routes for payment checkout and webhook endpoints
 import express from 'express';
+import {
+  createPaymentIntent,
+  handleWebhook,
+  getPaymentByBooking,
+} from './payment.controller.js';
+import protect from '../../middleware/protect.js';
 
 const router = express.Router();
 
-router.post('/checkout-session', (req, res) => res.json({ message: 'Create Stripe checkout session' }));
-router.post('/webhook', (req, res) => res.json({ message: 'Stripe webhook listener' }));
+// Webhook endpoint (Raw body required, no auth middleware as Stripe calls it directly)
+router.post('/webhook', express.raw({ type: 'application/json' }), handleWebhook);
+
+// Protected routes
+router.post('/create-intent', protect, createPaymentIntent);
+router.get('/booking/:bookingId', protect, getPaymentByBooking);
 
 export default router;
