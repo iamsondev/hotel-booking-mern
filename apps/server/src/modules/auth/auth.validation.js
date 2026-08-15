@@ -6,9 +6,14 @@ export const registerSchema = z.object({
   email: z.string().email('Invalid email address'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
   role: z.enum(['user', 'hotelOwner']).optional(),
+  phone: z.string().optional(),
 });
 
 export const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
   password: z.string().min(1, 'Password is required'),
+});
+
+export const googleLoginSchema = z.object({
+  idToken: z.string().min(1, 'Google ID token is required'),
 });
