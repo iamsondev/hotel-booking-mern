@@ -13,6 +13,8 @@ import ManageRooms from '../pages/owner/ManageRooms';
 import AdminDashboard from '../pages/admin/AdminDashboard';
 import PendingHotels from '../pages/admin/PendingHotels';
 import AllBookings from '../pages/admin/AllBookings';
+import AdminLayout from '../layouts/AdminLayout';
+import OwnerLayout from '../layouts/OwnerLayout';
 import ProtectedRoute from '../components/common/ProtectedRoute';
 import NotFound from '../pages/NotFound';
 
@@ -51,65 +53,32 @@ export default function AppRoutes() {
         }
       />
 
-      {/* Owner Protected Routes */}
+      {/* Owner Protected Routes with Layout */}
       <Route
-        path="/owner/dashboard"
         element={
           <ProtectedRoute allowedRoles={['hotelOwner']}>
-            <OwnerDashboard />
+            <OwnerLayout />
           </ProtectedRoute>
         }
-      />
-      <Route
-        path="/owner/hotels"
-        element={
-          <ProtectedRoute allowedRoles={['hotelOwner']}>
-            <MyHotels />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/owner/hotels/add"
-        element={
-          <ProtectedRoute allowedRoles={['hotelOwner']}>
-            <AddHotel />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/owner/hotels/:hotelId/rooms"
-        element={
-          <ProtectedRoute allowedRoles={['hotelOwner']}>
-            <ManageRooms />
-          </ProtectedRoute>
-        }
-      />
+      >
+        <Route path="/owner/dashboard" element={<OwnerDashboard />} />
+        <Route path="/owner/hotels" element={<MyHotels />} />
+        <Route path="/owner/hotels/add" element={<AddHotel />} />
+        <Route path="/owner/hotels/:hotelId/rooms" element={<ManageRooms />} />
+      </Route>
 
-      {/* Admin Protected Routes */}
+      {/* Admin Protected Routes with Layout */}
       <Route
-        path="/admin/dashboard"
         element={
           <ProtectedRoute allowedRoles={['admin']}>
-            <AdminDashboard />
+            <AdminLayout />
           </ProtectedRoute>
         }
-      />
-      <Route
-        path="/admin/pending-hotels"
-        element={
-          <ProtectedRoute allowedRoles={['admin']}>
-            <PendingHotels />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/admin/bookings"
-        element={
-          <ProtectedRoute allowedRoles={['admin']}>
-            <AllBookings />
-          </ProtectedRoute>
-        }
-      />
+      >
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/admin/pending-hotels" element={<PendingHotels />} />
+        <Route path="/admin/bookings" element={<AllBookings />} />
+      </Route>
 
       {/* 404 Fallback */}
       <Route path="*" element={<NotFound />} />
