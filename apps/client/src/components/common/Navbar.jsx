@@ -1,6 +1,8 @@
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLogoutMutation } from '../../features/auth/authApiSlice';
+import Logo from './Logo';
+import ThemeToggle from './ThemeToggle';
 
 export default function Navbar() {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
@@ -19,16 +21,16 @@ export default function Navbar() {
   return (
     <nav className="bg-neutral-900 border-b border-neutral-800 text-white py-4 px-6">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
-        {/* Logo */}
-        <Link to="/" className="text-xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent hover:opacity-90 transition">
-          StayEase
-        </Link>
+        {/* Brand Logo */}
+        <Logo />
 
-        {/* Navigation Links */}
+        {/* Navigation Links & Controls */}
         <div className="flex items-center space-x-6">
           <Link to="/" className="text-sm font-medium text-neutral-300 hover:text-white transition">
             Home
           </Link>
+
+          <ThemeToggle />
           
           {isAuthenticated ? (
             <div className="flex items-center space-x-4">

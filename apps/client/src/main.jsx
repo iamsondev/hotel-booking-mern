@@ -8,14 +8,18 @@ import { store } from './app/store';
 import './index.css';
 import App from './app/App.jsx';
 
+import { ThemeProvider } from './context/ThemeContext';
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>
       <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID || ""}>
-        <BrowserRouter>
-          <Toaster position="top-right" reverseOrder={false} />
-          <App />
-        </BrowserRouter>
+        <ThemeProvider>
+          <BrowserRouter>
+            <Toaster position="top-right" reverseOrder={false} />
+            <App />
+          </BrowserRouter>
+        </ThemeProvider>
       </GoogleOAuthProvider>
     </Provider>
   </StrictMode>

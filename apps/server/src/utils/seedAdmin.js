@@ -27,17 +27,22 @@ const seedAdminAndDemo = async () => {
     }
 
     // Hotel Owner account
-    const ownerEmail = 'owner@stayease.com';
+    const ownerEmail = 'owner@gmail.com';
     let owner = await User.findOne({ email: ownerEmail });
     if (!owner) {
       owner = await User.create({
         name: 'Demo Hotel Owner',
         email: ownerEmail,
-        password: 'ownerpassword123',
+        password: 'password123',
         role: 'hotelOwner',
         isApproved: true,
       });
-      console.log('✅ Owner account created: owner@stayease.com / ownerpassword123');
+      console.log('✅ Owner account created: owner@gmail.com / password123');
+    } else {
+      owner.password = 'password123';
+      owner.role = 'hotelOwner';
+      await owner.save();
+      console.log('✅ Owner account updated: owner@gmail.com / password123');
     }
 
     // Customer account

@@ -1,5 +1,7 @@
 import { Link, useLocation, Outlet } from 'react-router-dom';
 import { LayoutDashboard, Clock, CalendarCheck, ArrowLeft, ShieldCheck } from 'lucide-react';
+import Logo from '../components/common/Logo';
+import ThemeToggle from '../components/common/ThemeToggle';
 
 export default function AdminLayout() {
   const location = useLocation();
@@ -27,14 +29,20 @@ export default function AdminLayout() {
       {/* Sidebar */}
       <aside className="w-full md:w-64 bg-neutral-900/90 border-r border-neutral-850 p-6 flex flex-col justify-between flex-shrink-0" style={{ borderColor: '#1f1f1f' }}>
         <div className="space-y-8">
+          {/* Brand Logo & Theme Switcher */}
+          <div className="flex items-center justify-between">
+            <Logo />
+            <ThemeToggle />
+          </div>
+
           {/* Header Badge */}
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 bg-indigo-950/40 border border-indigo-800/40 p-3 rounded-2xl">
             <div className="p-2 bg-indigo-600/20 border border-indigo-500/30 rounded-xl text-indigo-400">
               <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-base font-extrabold tracking-tight text-white">Admin Console</h2>
-              <p className="text-[11px] text-neutral-500">Platform Control</p>
+              <h2 className="text-sm font-extrabold tracking-tight text-white">Admin Console</h2>
+              <p className="text-[10px] text-neutral-400">Platform Control</p>
             </div>
           </div>
 
