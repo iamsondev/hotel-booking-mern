@@ -20,9 +20,16 @@ export default function Login() {
       return;
     }
     try {
-      await login({ email, password }).unwrap();
+      const res = await login({ email, password }).unwrap();
       toast.success('Successfully logged in!');
-      navigate('/');
+      const userRole = res?.data?.role;
+      if (userRole === 'admin') {
+        navigate('/admin/dashboard');
+      } else if (userRole === 'hotelOwner') {
+        navigate('/owner/dashboard');
+      } else {
+        navigate('/');
+      }
     } catch (err) {
       toast.error(err?.data?.message || err?.error || 'Login failed. Please try again.');
     }
@@ -38,6 +45,45 @@ export default function Login() {
         <div className="text-center mb-8 relative z-10">
           <h2 className="text-3xl font-extrabold text-white tracking-tight">Welcome Back</h2>
           <p className="text-neutral-400 mt-2 text-sm">Sign in to manage bookings and stays</p>
+        </div>
+
+        {/* Demo Credentials Helper */}
+        <div className="mb-6 bg-neutral-950/70 border border-neutral-800 rounded-2xl p-3 relative z-10">
+          <p className="text-[11px] font-semibold text-neutral-400 uppercase tracking-wider mb-2 text-center">
+            Quick Fill Demo Accounts:
+          </p>
+          <div className="grid grid-cols-3 gap-1.5 text-xs">
+            <button
+              type="button"
+              onClick={() => {
+                setEmail('admin@stayease.com');
+                setPassword('adminpassword123');
+              }}
+              className="bg-indigo-950/60 hover:bg-indigo-900/80 border border-indigo-800/50 text-indigo-300 py-1.5 rounded-xl transition cursor-pointer font-medium text-center"
+            >
+              Admin
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setEmail('owner@stayease.com');
+                setPassword('ownerpassword123');
+              }}
+              className="bg-purple-950/60 hover:bg-purple-900/80 border border-purple-800/50 text-purple-300 py-1.5 rounded-xl transition cursor-pointer font-medium text-center"
+            >
+              Hotel Owner
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setEmail('user@stayease.com');
+                setPassword('userpassword123');
+              }}
+              className="bg-emerald-950/60 hover:bg-emerald-900/80 border border-emerald-800/50 text-emerald-300 py-1.5 rounded-xl transition cursor-pointer font-medium text-center"
+            >
+              Customer
+            </button>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5 relative z-10 font-sans">
@@ -100,9 +146,16 @@ export default function Login() {
           <GoogleLogin
             onSuccess={async (credentialResponse) => {
               try {
-                await googleLogin({ token: credentialResponse.credential }).unwrap();
+                const res = await googleLogin({ token: credentialResponse.credential }).unwrap();
                 toast.success('Successfully logged in with Google!');
-                navigate('/');
+                const userRole = res?.data?.role;
+                if (userRole === 'admin') {
+                  navigate('/admin/dashboard');
+                } else if (userRole === 'hotelOwner') {
+                  navigate('/owner/dashboard');
+                } else {
+                  navigate('/');
+                }
               } catch (err) {
                 toast.error(err?.data?.message || 'Google authentication failed');
               }
