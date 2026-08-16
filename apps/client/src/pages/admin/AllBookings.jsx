@@ -10,7 +10,9 @@ export default function AllBookings() {
   const [page, setPage] = useState(1);
   const perPage = 10;
 
-  const allBookings = bookingsResponse?.bookings || bookingsResponse || [];
+  const allBookings = Array.isArray(bookingsResponse)
+    ? bookingsResponse
+    : bookingsResponse?.data || bookingsResponse?.bookings || [];
 
   // Client-side filter by status
   const filtered = statusFilter === 'all'

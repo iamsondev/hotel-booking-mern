@@ -7,7 +7,9 @@ export default function PendingHotels() {
   const [approveHotel, { isLoading: isApproving }] = useApproveHotelMutation();
   const [rejectHotel, { isLoading: isRejecting }] = useRejectHotelMutation();
 
-  const hotels = pendingResponse?.hotels || pendingResponse || [];
+  const hotels = Array.isArray(pendingResponse)
+    ? pendingResponse
+    : pendingResponse?.data || pendingResponse?.hotels || [];
 
   const handleApprove = async (hotelId, hotelName) => {
     try {
