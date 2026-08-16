@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Home from '../pages/Home';
 import HotelDetails from '../pages/HotelDetails';
 import Login from '../pages/Login';
@@ -14,6 +14,7 @@ import AdminDashboard from '../pages/admin/AdminDashboard';
 import PendingHotels from '../pages/admin/PendingHotels';
 import AllBookings from '../pages/admin/AllBookings';
 import ProtectedRoute from '../components/common/ProtectedRoute';
+import NotFound from '../pages/NotFound';
 
 export default function AppRoutes() {
   return (
@@ -110,8 +111,8 @@ export default function AppRoutes() {
         }
       />
 
-      {/* Fallback */}
-      <Route path="*" element={<Navigate to="/" replace />} />
+      {/* 404 Fallback */}
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
