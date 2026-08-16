@@ -12,9 +12,10 @@ export const authApiSlice = apiSlice.injectEndpoints({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
+          // Backend returns: { success, message, data: { _id, name, email, role, accessToken } }
           dispatch(setCredentials({
-            user: data.user,
-            token: data.token || data.accessToken
+            user: data.data,
+            token: data.data?.accessToken
           }));
         } catch (err) {
           console.error('Registration failed:', err);
@@ -30,9 +31,10 @@ export const authApiSlice = apiSlice.injectEndpoints({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
+          // Backend returns: { success, message, data: { _id, name, email, role, accessToken } }
           dispatch(setCredentials({
-            user: data.user,
-            token: data.token || data.accessToken
+            user: data.data,
+            token: data.data?.accessToken
           }));
         } catch (err) {
           console.error('Login failed:', err);
@@ -43,14 +45,16 @@ export const authApiSlice = apiSlice.injectEndpoints({
       query: (tokenData) => ({
         url: '/auth/google',
         method: 'POST',
-        body: tokenData,
+        // Backend Zod schema expects { idToken }, frontend @react-oauth/google sends credential string
+        body: { idToken: tokenData.token || tokenData.idToken || tokenData.credential },
       }),
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
+          // Backend returns: { success, message, data: { _id, name, email, role, accessToken } }
           dispatch(setCredentials({
-            user: data.user,
-            token: data.token || data.accessToken
+            user: data.data,
+            token: data.data?.accessToken
           }));
         } catch (err) {
           console.error('Google login failed:', err);

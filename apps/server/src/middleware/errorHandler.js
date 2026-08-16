@@ -26,6 +26,9 @@ const errorHandler = (err, req, res, next) => {
       .join(', ');
   }
 
+  // Log server errors for debugging
+  console.error('❌ Server Error:', err);
+
   res.status(statusCode).json({
     success: false,
     message,
