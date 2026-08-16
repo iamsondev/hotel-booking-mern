@@ -1,39 +1,116 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useLoginMutation, useGoogleLoginMutation } from '../features/auth/authApiSlice';
+import { GoogleLogin } from '@react-oauth/google';
+import { toast } from 'react-hot-toast';
 
 export default function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [login, { isLoading }] = useLoginMutation();
+  const [googleLogin, { isLoading: isGoogleLoading }] = useGoogleLoginMutation();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!email || !password) {
+      toast.error('Please enter all credentials');
+      return;
+    }
+    try {
+      await login({ email, password }).unwrap();
+      toast.success('Successfully logged in!');
+      navigate('/');
+    } catch (err) {
+      toast.error(err?.data?.message || err?.error || 'Login failed. Please try again.');
+    }
+  };
+
   return (
-    <div className="bg-neutral-900 border border-neutral-800 rounded-3xl p-8 max-w-md mx-auto my-12 shadow-xl">
-      <h2 className="text-2xl font-bold text-white text-center mb-6">Login to StayEase</h2>
-      <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-neutral-400 mb-1">Email Address</label>
-          <input
-            type="email"
-            className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-2 text-white outline-none focus:border-indigo-500 transition"
-            placeholder="name@example.com"
+    <div className="min-h-[80vh] flex items-center justify-center px-4">
+      <div className="w-full max-w-md bg-neutral-900 border border-neutral-800 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+        {/* Decorative ambient blur background */}
+        <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute bottom-0 left-0 w-32 h-32 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div className="text-center mb-8 relative z-10">
+          <h2 className="text-3xl font-extrabold text-white tracking-tight">Welcome Back</h2>
+          <p className="text-neutral-400 mt-2 text-sm">Sign in to manage bookings and stays</p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-5 relative z-10 font-sans">
+          <div>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-2">
+              Email Address
+            </label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full bg-neutral-950/60 border border-neutral-800 focus:border-indigo-500 rounded-2xl px-4 py-3 text-white outline-none focus:outline-none transition-all placeholder:text-neutral-600 focus:ring-1 focus:ring-indigo-500"
+              placeholder="name@example.com"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-2">
+              Password
+            </label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full bg-neutral-950/60 border border-neutral-800 focus:border-indigo-500 rounded-2xl px-4 py-3 text-white outline-none focus:outline-none transition-all placeholder:text-neutral-600 focus:ring-1 focus:ring-indigo-500"
+              placeholder="••••••••"
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={isLoading || isGoogleLoading}
+            className="w-full bg-indigo-600 hover:bg-indigo-500 disabled:bg-neutral-800 disabled:text-neutral-500 text-white font-semibold hover:shadow-lg hover:shadow-indigo-500/20 py-3 rounded-2xl transition duration-300 cursor-pointer text-center"
+          >
+            {isLoading ? 'Signing In...' : 'Sign In'}
+          </button>
+        </form>
+
+        <div className="relative my-6 text-center z-10">
+          <span className="bg-neutral-900 px-4 text-xs text-neutral-500 relative z-10 uppercase tracking-widest">
+            Or continue with
+          </span>
+          <div className="absolute w-full h-[1px] bg-neutral-800 top-1/2 left-0 -z-0"></div>
+        </div>
+
+        <div className="flex justify-center mb-6 relative z-10 w-full" style={{ minHeight: '44px' }}>
+          <GoogleLogin
+            onSuccess={async (credentialResponse) => {
+              try {
+                await googleLogin({ token: credentialResponse.credential }).unwrap();
+                toast.success('Successfully logged in with Google!');
+                navigate('/');
+              } catch (err) {
+                toast.error(err?.data?.message || 'Google authentication failed');
+              }
+            }}
+            onError={() => {
+              toast.error('Google login failed. Try again.');
+            }}
+            theme="filled_dark"
+            shape="pill"
+            text="continue_with"
+            width="340px"
           />
         </div>
-        <div>
-          <label className="block text-sm font-medium text-neutral-400 mb-1">Password</label>
-          <input
-            type="password"
-            className="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-2 text-white outline-none focus:border-indigo-500 transition"
-            placeholder="••••••••"
-          />
-        </div>
-        <button
-          type="submit"
-          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 rounded-xl transition duration-200"
-        >
-          Sign In
-        </button>
-      </form>
-      <p className="text-center text-sm text-neutral-500 mt-6">
-        Don&apos;t have an account?{' '}
-        <Link to="/register" className="text-indigo-400 hover:underline">
-          Register here
-        </Link>
-      </p>
+
+        <p className="text-center text-sm text-neutral-400 relative z-10 mt-4">
+          Don&apos;t have an account?{' '}
+          <Link to="/register" className="text-indigo-400 hover:text-indigo-300 font-semibold transition">
+            Register here
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }
