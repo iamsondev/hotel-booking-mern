@@ -41,17 +41,22 @@ const seedAdminAndDemo = async () => {
     }
 
     // Customer account
-    const userEmail = 'user@stayease.com';
+    const userEmail = 'user@gmail.com';
     let user = await User.findOne({ email: userEmail });
     if (!user) {
       user = await User.create({
         name: 'Demo Customer',
         email: userEmail,
-        password: 'userpassword123',
+        password: 'password123',
         role: 'user',
         isApproved: true,
       });
-      console.log('✅ User account created: user@stayease.com / userpassword123');
+      console.log('✅ User account created: user@gmail.com / password123');
+    } else {
+      user.password = 'password123';
+      user.role = 'user';
+      await user.save();
+      console.log('✅ User account updated: user@gmail.com / password123');
     }
 
     process.exit(0);

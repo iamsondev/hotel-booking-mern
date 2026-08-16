@@ -15,6 +15,7 @@ import PendingHotels from '../pages/admin/PendingHotels';
 import AllBookings from '../pages/admin/AllBookings';
 import AdminLayout from '../layouts/AdminLayout';
 import OwnerLayout from '../layouts/OwnerLayout';
+import CustomerLayout from '../layouts/CustomerLayout';
 import ProtectedRoute from '../components/common/ProtectedRoute';
 import NotFound from '../pages/NotFound';
 
@@ -36,14 +37,7 @@ export default function AppRoutes() {
           </ProtectedRoute>
         }
       />
-      <Route
-        path="/my-bookings"
-        element={
-          <ProtectedRoute>
-            <MyBookings />
-          </ProtectedRoute>
-        }
-      />
+
       <Route
         path="/payment/:bookingId"
         element={
@@ -52,6 +46,17 @@ export default function AppRoutes() {
           </ProtectedRoute>
         }
       />
+
+      {/* User Protected Routes with Layout */}
+      <Route
+        element={
+          <ProtectedRoute allowedRoles={['user', 'hotelOwner', 'admin']}>
+            <CustomerLayout />
+          </ProtectedRoute>
+        }
+      >
+        <Route path="/my-bookings" element={<MyBookings />} />
+      </Route>
 
       {/* Owner Protected Routes with Layout */}
       <Route

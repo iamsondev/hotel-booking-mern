@@ -76,8 +76,8 @@ export default function Login() {
             <button
               type="button"
               onClick={() => {
-                setEmail('user@stayease.com');
-                setPassword('userpassword123');
+                setEmail('user@gmail.com');
+                setPassword('password123');
               }}
               className="bg-emerald-950/60 hover:bg-emerald-900/80 border border-emerald-800/50 text-emerald-300 py-1.5 rounded-xl transition cursor-pointer font-medium text-center"
             >
