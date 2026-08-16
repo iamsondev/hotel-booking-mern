@@ -5,6 +5,7 @@ import Login from '../pages/Login';
 import Register from '../pages/Register';
 import BookingPage from '../pages/BookingPage';
 import MyBookings from '../pages/MyBookings';
+import Payment from '../pages/Payment';
 import OwnerDashboard from '../pages/owner/OwnerDashboard';
 import MyHotels from '../pages/owner/MyHotels';
 import AddHotel from '../pages/owner/AddHotel';
@@ -37,6 +38,14 @@ export default function AppRoutes() {
         element={
           <ProtectedRoute>
             <MyBookings />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/payment/:bookingId"
+        element={
+          <ProtectedRoute>
+            <Payment />
           </ProtectedRoute>
         }
       />
