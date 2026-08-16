@@ -1,1 +1,15 @@
-// Configure Redux Store with reducers and middleware of RTK Query base apiSlice and other UI slices
+import { configureStore } from '@reduxjs/toolkit';
+import { apiSlice } from './apiSlice';
+import authReducer from '../features/auth/authSlice';
+
+export const store = configureStore({
+  reducer: {
+    [apiSlice.reducerPath]: apiSlice.reducer,
+    auth: authReducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(apiSlice.middleware),
+  devTools: import.meta.env.DEV,
+});
+
+export default store;
