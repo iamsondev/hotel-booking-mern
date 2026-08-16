@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useRegisterMutation } from '../features/auth/authApiSlice';
+import { useRegisterMutation, useGoogleLoginMutation } from '../features/auth/authApiSlice';
+import { GoogleLogin } from '@react-oauth/google';
 import { toast } from 'react-hot-toast';
 import { Eye, EyeOff } from 'lucide-react';
 
@@ -14,6 +15,7 @@ export default function Register() {
   const [showConfirm, setShowConfirm] = useState(false);
 
   const [register, { isLoading }] = useRegisterMutation();
+  const [googleLogin, { isLoading: isGoogleLoading }] = useGoogleLoginMutation();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -160,6 +162,36 @@ export default function Register() {
             {isLoading ? 'Creating Account...' : 'Sign Up'}
           </button>
         </form>
+
+        {/* Divider */}
+        <div className="relative my-6 text-center z-10">
+          <span className="bg-neutral-900 px-4 text-xs text-neutral-500 relative z-10 uppercase tracking-widest">
+            Or sign up with
+          </span>
+          <div className="absolute w-full h-[1px] bg-neutral-800 top-1/2 left-0 -z-0"></div>
+        </div>
+
+        {/* Google Sign-Up */}
+        <div className="flex justify-center mb-4 relative z-10" style={{ minHeight: '44px' }}>
+          <GoogleLogin
+            onSuccess={async (credentialResponse) => {
+              try {
+                await googleLogin({ token: credentialResponse.credential }).unwrap();
+                toast.success('Successfully signed up with Google!');
+                navigate('/');
+              } catch (err) {
+                toast.error(err?.data?.message || 'Google sign-up failed. Try again.');
+              }
+            }}
+            onError={() => {
+              toast.error('Google sign-up failed. Try again.');
+            }}
+            theme="filled_dark"
+            shape="pill"
+            text="signup_with"
+            width="340px"
+          />
+        </div>
 
         <p className="text-center text-sm text-neutral-400 relative z-10 mt-6">
           Already have an account?{' '}
