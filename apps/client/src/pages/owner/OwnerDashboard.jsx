@@ -1,9 +1,11 @@
+import { useSelector } from 'react-redux';
 import { useGetMyHotelsQuery } from '../../features/hotels/hotelApiSlice';
 import { Link } from 'react-router-dom';
 import Loader from '../../components/common/Loader';
-import { Building2, PlusCircle, CheckCircle2, Clock, ArrowRight, Sparkles } from 'lucide-react';
+import { Building2, PlusCircle, CheckCircle2, Clock, ArrowRight, Sparkles, AlertTriangle } from 'lucide-react';
 
 export default function OwnerDashboard() {
+  const { user } = useSelector((state) => state.auth);
   const { data: hotelsResponse, isLoading, error } = useGetMyHotelsQuery();
   const hotels = Array.isArray(hotelsResponse)
     ? hotelsResponse
@@ -26,7 +28,19 @@ export default function OwnerDashboard() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-10 py-6 px-4">
+    <div className="max-w-7xl mx-auto space-y-8 py-6 px-4 font-sans">
+      {/* Conditional Pending Verification Alert Banner */}
+      {user && user.isApproved === false && (
+        <div className="bg-amber-950/40 border border-amber-500/40 rounded-2xl p-4 flex items-start space-x-3 text-amber-300 shadow-lg">
+          <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5 text-amber-400" />
+          <div className="text-sm">
+            <h4 className="font-bold text-amber-200">Account Pending Verification</h4>
+            <p className="text-xs text-amber-300/80 mt-0.5">
+              Your account is pending admin verification. You can still add hotels, but they&apos;ll need approval before going live.
+            </p>
+          </div>
+        </div>
+      )}
       {/* Top Banner / Welcome */}
       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-purple-950/80 via-neutral-900 to-indigo-950/80 border border-neutral-800 p-8 shadow-2xl">
         <div className="absolute top-0 right-0 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>

@@ -41,15 +41,20 @@ export default function Navbar() {
                 )}
               </span>
 
-              {/* Role-based Dashboard link */}
+              {/* Role-based Dashboard links */}
               {user?.role === 'admin' && (
-                <Link to="/admin/dashboard" className="text-sm font-medium text-indigo-450 hover:text-indigo-350 transition" style={{ color: '#818cf8' }}>
+                <Link to="/admin/dashboard" className="text-sm font-medium text-indigo-400 hover:text-indigo-300 transition">
                   Admin Dashboard
                 </Link>
               )}
               {user?.role === 'hotelOwner' && (
-                <Link to="/owner/dashboard" className="text-sm font-medium text-indigo-450 hover:text-indigo-350 transition" style={{ color: '#818cf8' }}>
+                <Link to="/owner/dashboard" className="text-sm font-medium text-indigo-400 hover:text-indigo-300 transition">
                   Owner Dashboard
+                </Link>
+              )}
+              {user?.role === 'user' && (
+                <Link to="/my-bookings" className="text-sm font-medium text-indigo-400 hover:text-indigo-300 transition">
+                  My Bookings
                 </Link>
               )}
 

@@ -10,13 +10,13 @@ export default function MyHotels() {
     switch (status?.toLowerCase()) {
       case 'approved':
       case 'active':
-        return 'bg-emerald-950/50 text-emerald-400 border border-emerald-800/80';
+        return 'bg-emerald-950/80 text-emerald-300 border border-emerald-500/50';
       case 'pending':
-        return 'bg-amber-950/50 text-amber-400 border border-amber-800/80';
+        return 'bg-amber-950/80 text-amber-300 border border-amber-500/50';
       case 'rejected':
-        return 'bg-red-950/50 text-red-400 border border-red-800/80';
+        return 'bg-red-950/80 text-red-300 border border-red-500/50';
       case 'suspended':
-        return 'bg-neutral-850 text-neutral-450 border border-neutral-800';
+        return 'bg-neutral-800 text-neutral-400 border border-neutral-600';
       default:
         return 'bg-neutral-850 text-neutral-400 border border-neutral-800';
     }
@@ -93,6 +93,12 @@ export default function MyHotels() {
                       {hotel.address?.line1 ? `${hotel.address.line1}, ` : ''}{hotel.address?.city || 'City unspecified'}
                     </p>
                     <p className="text-neutral-450 text-sm line-clamp-2" style={{ color: '#aaa' }}>{hotel.description || 'No description provided.'}</p>
+
+                    {hotel.status?.toLowerCase() === 'rejected' && (
+                      <div className="bg-red-950/40 border border-red-900/60 rounded-xl p-2.5 text-xs text-red-300">
+                        <span className="font-bold">Status Notice:</span> Rejected (Contact admin or update listing details for re-review)
+                      </div>
+                    )}
                   </div>
                 </div>
 

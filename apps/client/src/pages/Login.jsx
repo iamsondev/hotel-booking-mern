@@ -28,7 +28,7 @@ export default function Login() {
       } else if (userRole === 'hotelOwner') {
         navigate('/owner/dashboard');
       } else {
-        navigate('/');
+        navigate('/my-bookings');
       }
     } catch (err) {
       toast.error(err?.data?.message || err?.error || 'Login failed. Please try again.');
