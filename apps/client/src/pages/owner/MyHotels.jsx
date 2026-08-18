@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useGetMyHotelsQuery, useUpdateHotelMutation, useDeleteHotelMutation } from '../../features/hotels/hotelApiSlice';
 import { Link } from 'react-router-dom';
 import Loader from '../../components/common/Loader';
@@ -6,6 +7,7 @@ import CloudinaryImageUpload from '../../components/common/CloudinaryImageUpload
 import { toast } from 'react-hot-toast';
 
 export default function MyHotels() {
+  const { user } = useSelector((state) => state.auth);
   const { data: hotelsResponse, isLoading, error } = useGetMyHotelsQuery();
   const [updateHotel, { isLoading: isUpdating }] = useUpdateHotelMutation();
   const [deleteHotel, { isLoading: isDeleting }] = useDeleteHotelMutation();
@@ -117,6 +119,18 @@ export default function MyHotels() {
           Add New Hotel
         </Link>
       </div>
+
+      {user && user.isApproved === false && (
+        <div className="bg-amber-950/40 border border-amber-800/80 rounded-2xl p-4 text-amber-300 text-sm flex items-start space-x-3">
+          <span className="text-xl">⚠️</span>
+          <div>
+            <span className="font-bold text-amber-200 block">Vendor Account Pending Approval</span>
+            <p className="text-xs text-amber-300/80 mt-0.5">
+              Your Vendor/HotelOwner account is currently awaiting Admin verification. Once your account is verified by our admin team, you will be able to publish live hotel listings.
+            </p>
+          </div>
+        </div>
+      )}
 
       {!hotels || hotels.length === 0 ? (
         <div className="text-center p-12 bg-neutral-900 border border-neutral-808 rounded-3xl text-neutral-400 text-sm" style={{ borderColor: '#1c1c1c', color: '#888' }}>

@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Home from '../pages/Home';
+import ExploreHotels from '../pages/ExploreHotels';
 import HotelDetails from '../pages/HotelDetails';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
@@ -13,6 +14,7 @@ import AddHotel from '../pages/owner/AddHotel';
 import ManageRooms from '../pages/owner/ManageRooms';
 import AdminDashboard from '../pages/admin/AdminDashboard';
 import PendingHotels from '../pages/admin/PendingHotels';
+import PendingVendors from '../pages/admin/PendingVendors';
 import AllBookings from '../pages/admin/AllBookings';
 import AdminLayout from '../layouts/AdminLayout';
 import OwnerLayout from '../layouts/OwnerLayout';
@@ -32,6 +34,7 @@ export default function AppRoutes() {
     <Routes>
       {/* Public Routes */}
       <Route path="/" element={<Home />} />
+      <Route path="/hotels" element={<ExploreHotels />} />
       <Route path="/hotels/:id" element={<HotelDetails />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
@@ -91,6 +94,7 @@ export default function AppRoutes() {
         }
       >
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/admin/pending-vendors" element={<PendingVendors />} />
         <Route path="/admin/pending-hotels" element={<PendingHotels />} />
         <Route path="/admin/bookings" element={<AllBookings />} />
       </Route>
