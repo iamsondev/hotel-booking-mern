@@ -9,6 +9,7 @@ import hotelRoutes from './modules/hotel/hotel.routes.js';
 import roomRoutes from './modules/room/room.routes.js';
 import bookingRoutes from './modules/booking/booking.routes.js';
 import paymentRoutes from './modules/payment/payment.routes.js';
+import userRoutes from './modules/user/user.routes.js';
 
 import notFound from './middleware/notFound.js';
 import errorHandler from './middleware/errorHandler.js';
@@ -44,6 +45,7 @@ app.get('/health', (req, res) => {
 
 // Mount Feature Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 app.use('/api/hotels', hotelRoutes);
 app.use('/api/rooms', roomRoutes);
 app.use('/api/bookings', bookingRoutes);

@@ -16,6 +16,10 @@ export const createHotel = asyncHandler(async (req, res) => {
     throw new ApiError(400, errorMsg);
   }
 
+  if (req.user.role === 'hotelOwner' && req.user.isApproved === false) {
+    throw new ApiError(403, 'Your vendor account is pending admin approval. You cannot register hotels yet.');
+  }
+
   const hotelData = {
     ...validation.data,
     owner: req.user._id,
