@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useGetHotelsQuery } from '../features/hotels/hotelApiSlice';
 import HotelCard from '../components/hotel/HotelCard';
 import Loader from '../components/common/Loader';
+import Pagination from '../components/common/Pagination';
 import { Search, SlidersHorizontal, MapPin, Star, Building2, RotateCcw } from 'lucide-react';
 
 export default function ExploreHotels() {
@@ -140,27 +141,11 @@ export default function ExploreHotels() {
           </div>
 
           {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="flex justify-center items-center space-x-4 pt-6 border-t border-[var(--border-color)]">
-              <button
-                onClick={() => setPage((p) => Math.max(p - 1, 1))}
-                disabled={page === 1}
-                className="bg-[var(--bg-card)] hover:bg-[var(--bg-card-hover)] disabled:opacity-40 text-[var(--text-primary)] font-medium py-2 px-5 rounded-xl text-sm border border-[var(--border-color)] transition cursor-pointer disabled:cursor-not-allowed"
-              >
-                ← Previous
-              </button>
-              <span className="text-sm font-semibold text-[var(--text-secondary)]">
-                Page {page} of {totalPages}
-              </span>
-              <button
-                onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
-                disabled={page === totalPages}
-                className="bg-[var(--bg-card)] hover:bg-[var(--bg-card-hover)] disabled:opacity-40 text-[var(--text-primary)] font-medium py-2 px-5 rounded-xl text-sm border border-[var(--border-color)] transition cursor-pointer disabled:cursor-not-allowed"
-              >
-                Next →
-              </button>
-            </div>
-          )}
+          <Pagination
+            page={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
+          />
         </div>
       )}
     </div>
