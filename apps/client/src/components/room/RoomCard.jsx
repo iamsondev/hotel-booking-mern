@@ -62,7 +62,12 @@ export default function RoomCard({ room, hotelId }) {
           <div className="flex items-center gap-4 text-xs text-[var(--text-secondary)] font-medium pt-1 border-t border-[var(--border-color)]">
             <div className="flex items-center gap-1.5">
               <Users className="w-4 h-4 text-[var(--color-primary)]" />
-              <span>{room.capacity || 2} {room.capacity === 1 ? 'Guest' : 'Guests'}</span>
+              {(() => {
+                const adults = room.capacity?.adults ?? room.adults ?? 2;
+                const children = room.capacity?.children ?? room.children ?? 0;
+                const total = adults + children;
+                return <span>{total} {total === 1 ? 'Guest' : 'Guests'}</span>;
+              })()}
             </div>
             <div className="flex items-center gap-1.5">
               <BedDouble className="w-4 h-4 text-[var(--color-accent)]" />
