@@ -1,4 +1,5 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import Home from '../pages/Home';
 import HotelDetails from '../pages/HotelDetails';
 import Login from '../pages/Login';
@@ -19,6 +20,13 @@ import CustomerLayout from '../layouts/CustomerLayout';
 import ProtectedRoute from '../components/common/ProtectedRoute';
 import NotFound from '../pages/NotFound';
 
+function DashboardRedirect() {
+  const { user } = useSelector((s) => s.auth);
+  if (user?.role === 'admin') return <Navigate to="/admin/dashboard" replace />;
+  if (user?.role === 'hotelOwner') return <Navigate to="/owner/dashboard" replace />;
+  return <Navigate to="/my-bookings" replace />;
+}
+
 export default function AppRoutes() {
   return (
     <Routes>
@@ -27,6 +35,8 @@ export default function AppRoutes() {
       <Route path="/hotels/:id" element={<HotelDetails />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/dashboard" element={<ProtectedRoute><DashboardRedirect /></ProtectedRoute>} />
+
 
       {/* General Protected Routes */}
       <Route
