@@ -4,6 +4,7 @@ export const roomApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getRoomsByHotel: builder.query({
       query: (hotelId) => `/hotels/${hotelId}/rooms`,
+      transformResponse: (response) => response.data || response.rooms || (Array.isArray(response) ? response : []),
       providesTags: ['Room'],
     }),
     getRoomById: builder.query({
