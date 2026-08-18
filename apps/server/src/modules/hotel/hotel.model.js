@@ -32,7 +32,7 @@ const hotelSchema = new mongoose.Schema(
       },
       coordinates: {
         type: [Number], // [longitude, latitude]
-        index: '2dsphere',
+        default: [91.9774, 21.4272],
       },
     },
     images: [{ type: String }],
@@ -51,6 +51,10 @@ const hotelSchema = new mongoose.Schema(
       type: String,
       enum: ['pending', 'approved', 'rejected', 'suspended'],
       default: 'pending',
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
     },
     avgRating: {
       type: Number,
@@ -77,7 +81,9 @@ hotelSchema.pre('save', function (next) {
       .replace(/[\s_-]+/g, '-')
       .replace(/^-+|-+$/g, '') + '-' + Date.now().toString().slice(-4);
   }
-  next();
+  if (typeof next === 'function') {
+    next();
+  }
 });
 
 const Hotel = mongoose.model('Hotel', hotelSchema);
