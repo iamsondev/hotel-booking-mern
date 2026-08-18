@@ -76,11 +76,11 @@ export default function Navbar() {
               <a href="/#destinations" className="text-xs sm:text-sm font-semibold text-[var(--text-secondary)] hover:text-[var(--color-primary)] transition">
                 Destinations
               </a>
-              <a href="/#special-offers" className="text-xs sm:text-sm font-semibold text-[var(--text-secondary)] hover:text-[var(--color-primary)] transition">
-                Special Offers
+              <a href="/#why-choose-us" className="text-xs sm:text-sm font-semibold text-[var(--text-secondary)] hover:text-[var(--color-primary)] transition">
+                Why Us
               </a>
-              <a href="/#experiences" className="text-xs sm:text-sm font-semibold text-[var(--text-secondary)] hover:text-[var(--color-primary)] transition">
-                Experiences
+              <a href="/#faq" className="text-xs sm:text-sm font-semibold text-[var(--text-secondary)] hover:text-[var(--color-primary)] transition">
+                FAQ
               </a>
             </nav>
           </div>
@@ -229,8 +229,8 @@ export default function Navbar() {
         <div className="lg:hidden border-t border-[var(--border-color)] bg-[var(--bg-card)] px-4 pb-6 pt-4 space-y-2 shadow-xl">
           <Link to="/hotels" onClick={() => setMobileOpen(false)} className="block px-3 py-2 rounded-xl text-sm font-bold text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)]">Explore Stays</Link>
           <a href="/#destinations" onClick={() => setMobileOpen(false)} className="block px-3 py-2 rounded-xl text-sm font-bold text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)]">Destinations</a>
-          <a href="/#special-offers" onClick={() => setMobileOpen(false)} className="block px-3 py-2 rounded-xl text-sm font-bold text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)]">Special Offers</a>
-          <a href="/#experiences" onClick={() => setMobileOpen(false)} className="block px-3 py-2 rounded-xl text-sm font-bold text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)]">Experiences</a>
+          <a href="/#why-choose-us" onClick={() => setMobileOpen(false)} className="block px-3 py-2 rounded-xl text-sm font-bold text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)]">Why Us</a>
+          <a href="/#faq" onClick={() => setMobileOpen(false)} className="block px-3 py-2 rounded-xl text-sm font-bold text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)]">FAQ</a>
           <div className="my-2 border-t border-[var(--border-color)]" />
           {isAuthenticated ? (
             <>
