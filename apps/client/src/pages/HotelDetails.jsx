@@ -28,8 +28,8 @@ export default function HotelDetails() {
   const galleryRef = useRef(null);
   const roomsSectionRef = useRef(null);
 
-  const hotel = hotelData?.hotel || hotelData;
-  const rooms = roomsData?.rooms || roomsData;
+  const hotel = hotelData?.data || hotelData?.hotel || (hotelData?._id ? hotelData : null);
+  const rooms = Array.isArray(roomsData) ? roomsData : (roomsData?.data || roomsData?.rooms || []);
 
   const isLoading = isHotelLoading || isRoomsLoading;
   const isError = hotelError || roomsError;
