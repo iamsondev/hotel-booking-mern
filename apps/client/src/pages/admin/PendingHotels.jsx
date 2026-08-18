@@ -1,6 +1,7 @@
 import { useGetPendingHotelsQuery, useApproveHotelMutation, useRejectHotelMutation } from '../../features/hotels/hotelApiSlice';
 import { toast } from 'react-hot-toast';
 import Loader from '../../components/common/Loader';
+import { MapPin, CheckCircle, XCircle, Building2 } from 'lucide-react';
 
 export default function PendingHotels() {
   const { data: pendingResponse, isLoading, error } = useGetPendingHotelsQuery();
@@ -41,16 +42,20 @@ export default function PendingHotels() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8 py-6">
+    <div className="max-w-6xl mx-auto space-y-8 py-6 px-4 sm:px-6 font-sans">
       <div>
-        <h2 className="text-3xl font-extrabold text-white tracking-tight">Pending Hotel Approvals</h2>
-        <p className="text-neutral-450 text-sm mt-1" style={{ color: '#888' }}>
-          Review and approve or reject submitted hotel listings before they appear on the platform.
+        <div className="inline-flex items-center space-x-2 bg-indigo-500/10 border border-indigo-500/20 px-3 py-1 rounded-full text-indigo-500 dark:text-indigo-400 text-xs font-semibold uppercase tracking-wider mb-2">
+          <Building2 className="w-3.5 h-3.5" />
+          <span>Listing Moderation Queue</span>
+        </div>
+        <h2 className="text-2xl sm:text-3xl font-extrabold text-[var(--text-primary)] tracking-tight">Pending Hotel Approvals</h2>
+        <p className="text-[var(--text-secondary)] text-xs sm:text-sm mt-1">
+          Review and approve or reject submitted hotel listings before they appear live on the platform.
         </p>
       </div>
 
       {hotels.length === 0 ? (
-        <div className="text-center p-12 bg-neutral-900 border border-neutral-808 rounded-3xl text-neutral-400 text-sm" style={{ borderColor: '#1c1c1c', color: '#888' }}>
+        <div className="text-center p-12 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-3xl text-[var(--text-muted)] text-sm">
           🎉 No hotels pending review. All submissions have been processed.
         </div>
       ) : (
@@ -63,16 +68,14 @@ export default function PendingHotels() {
             return (
               <div
                 key={hotelId}
-                className="bg-neutral-900 border border-neutral-850 hover:border-neutral-800 rounded-3xl overflow-hidden shadow-lg flex flex-col md:flex-row transition duration-200"
-                style={{ borderColor: '#222' }}
+                className="bg-[var(--bg-card)] border border-[var(--border-color)] hover:border-[var(--color-primary)]/50 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl flex flex-col md:flex-row transition duration-200"
               >
                 {/* Image */}
-                <div className="md:w-52 w-full flex-shrink-0 bg-neutral-850" style={{ minHeight: '160px', background: '#181818' }}>
+                <div className="md:w-56 w-full flex-shrink-0 bg-[var(--bg-input)] min-h-[160px]">
                   <img
                     src={imageUrl}
                     alt={hotel.name}
-                    className="w-full h-full object-cover"
-                    style={{ minHeight: '160px' }}
+                    className="w-full h-full object-cover min-h-[160px]"
                     onError={(e) => {
                       e.target.src = 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80';
                     }}
@@ -84,28 +87,25 @@ export default function PendingHotels() {
                   {/* Info Block */}
                   <div className="space-y-2 flex-1">
                     <div className="flex items-center gap-2">
-                      <h3 className="text-xl font-bold text-white tracking-tight">{hotel.name}</h3>
-                      <span className="bg-amber-950/50 text-amber-400 border border-amber-800/80 text-xs px-2.5 py-0.5 rounded-full capitalize font-semibold">
-                        Pending
+                      <h3 className="text-base sm:text-lg font-extrabold text-[var(--text-primary)] tracking-tight">{hotel.name}</h3>
+                      <span className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 text-[10px] uppercase px-2.5 py-0.5 rounded-full font-bold">
+                        Pending Listing
                       </span>
                     </div>
 
-                    <p className="text-neutral-400 text-xs flex items-center">
-                      <svg className="w-3.5 h-3.5 mr-1 text-neutral-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
+                    <p className="text-[var(--text-secondary)] text-xs flex items-center">
+                      <MapPin className="w-3.5 h-3.5 mr-1 text-[var(--color-primary)] flex-shrink-0" />
                       {hotel.address?.city || 'City unspecified'}, {hotel.address?.country || ''}
                     </p>
 
-                    <p className="text-neutral-450 text-sm line-clamp-2" style={{ color: '#aaa' }}>
+                    <p className="text-[var(--text-secondary)] text-xs line-clamp-2 leading-relaxed">
                       {hotel.description || 'No description provided.'}
                     </p>
 
                     {hotel.amenities && hotel.amenities.length > 0 && (
                       <div className="flex flex-wrap gap-1 pt-1">
                         {hotel.amenities.slice(0, 4).map((item, idx) => (
-                          <span key={idx} className="bg-neutral-950 border border-neutral-850 text-neutral-500 text-[10px] px-2 py-0.5 rounded-full capitalize">
+                          <span key={idx} className="bg-[var(--bg-input)] border border-[var(--border-color)] text-[var(--text-secondary)] text-[10px] px-2 py-0.5 rounded-full capitalize">
                             {item}
                           </span>
                         ))}
@@ -118,16 +118,18 @@ export default function PendingHotels() {
                     <button
                       onClick={() => handleApprove(hotelId, hotel.name)}
                       disabled={isApproving || isRejecting}
-                      className="flex-grow md:flex-grow-0 bg-emerald-900/60 hover:bg-emerald-800/80 text-emerald-400 border border-emerald-800/80 text-xs font-semibold py-2 px-6 rounded-xl transition cursor-pointer disabled:opacity-50 text-center"
+                      className="flex-1 md:flex-initial bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 text-xs font-bold py-2.5 px-6 rounded-xl transition cursor-pointer disabled:opacity-50 flex items-center justify-center space-x-1.5"
                     >
-                      ✓ Approve
+                      <CheckCircle className="w-4 h-4" />
+                      <span>Approve</span>
                     </button>
                     <button
                       onClick={() => handleReject(hotelId, hotel.name)}
                       disabled={isApproving || isRejecting}
-                      className="flex-grow md:flex-grow-0 bg-red-950/50 hover:bg-red-900/60 text-red-400 border border-red-800/80 text-xs font-semibold py-2 px-6 rounded-xl transition cursor-pointer disabled:opacity-50 text-center"
+                      className="flex-1 md:flex-initial bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 text-xs font-bold py-2.5 px-6 rounded-xl transition cursor-pointer disabled:opacity-50 flex items-center justify-center space-x-1.5"
                     >
-                      ✕ Reject
+                      <XCircle className="w-4 h-4" />
+                      <span>Reject</span>
                     </button>
                   </div>
                 </div>
