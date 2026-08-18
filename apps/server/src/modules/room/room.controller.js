@@ -2,6 +2,7 @@
 import asyncHandler from 'express-async-handler';
 import mongoose from 'mongoose';
 import Room from './room.model.js';
+import Booking from '../booking/booking.model.js';
 import ApiError from '../../utils/ApiError.js';
 import { createRoomSchema, updateRoomSchema } from './room.validation.js';
 
@@ -37,7 +38,7 @@ export const getRoomsByHotel = asyncHandler(async (req, res) => {
     throw new ApiError(400, 'Invalid Hotel ID format');
   }
 
-  const rooms = await Room.find({ hotel: hotelId, isActive: true }).sort({ pricePerNight: 1 });
+  const rooms = await Room.find({ hotel: hotelId, isDeleted: { $ne: true }, isActive: true }).sort({ pricePerNight: 1 });
 
   res.status(200).json({
     success: true,
@@ -56,7 +57,7 @@ export const getRoomById = asyncHandler(async (req, res) => {
   }
 
   const room = await Room.findById(id).populate('hotel', 'name address starRating images');
-  if (!room || !room.isActive) {
+  if (!room || !room.isActive || room.isDeleted) {
     throw new ApiError(404, 'Room not found or no longer active');
   }
 
@@ -97,18 +98,28 @@ export const updateRoom = asyncHandler(async (req, res) => {
 // @desc    Soft delete room (Owner / Admin) - set isActive to false
 // @route   DELETE /api/rooms/:id
 export const deleteRoom = asyncHandler(async (req, res) => {
-  const { id } = req.params;
+  const roomId = req.params.id;
 
-  const room = await Room.findById(id);
+  const room = await Room.findById(roomId);
   if (!room) {
     throw new ApiError(404, 'Room not found');
   }
 
-  room.isActive = false;
-  await room.save();
+  const hasBooking = await Booking.exists({ room: roomId });
 
-  res.status(200).json({
-    success: true,
-    message: 'Room deactivated (soft deleted) successfully',
-  });
+  if (!hasBooking) {
+    await Room.findByIdAndDelete(roomId);
+
+    return res.status(200).json({
+      success: true,
+      message: 'Room permanently deleted',
+    });
+  } else {
+    await Room.findByIdAndUpdate(roomId, { isActive: false, isDeleted: true });
+
+    return res.status(200).json({
+      success: true,
+      message: 'Room has booking history, deactivated instead of deleted',
+    });
+  }
 });
