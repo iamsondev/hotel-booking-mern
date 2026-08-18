@@ -1,56 +1,109 @@
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { Users, BedDouble, Wifi, Sparkles, ArrowRight, CheckCircle2, ShieldCheck } from 'lucide-react';
 
 export default function RoomCard({ room, hotelId }) {
   const navigate = useNavigate();
 
   if (!room) return null;
 
+  const roomImage = room.images && room.images.length > 0
+    ? room.images[0]
+    : 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=800&q=80';
+
   return (
-    <div className="bg-neutral-900 border border-neutral-850 hover:border-neutral-700 rounded-3xl p-6 shadow-md transition duration-300 flex flex-col justify-between h-full group" style={{ borderColor: '#222' }}>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      whileHover={{ y: -6 }}
+      transition={{ duration: 0.3 }}
+      className="group relative bg-[var(--bg-card)] border border-[var(--border-color)] hover:border-[var(--color-primary)]/50 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col justify-between h-full"
+    >
       <div>
-        {/* Header */}
-        <div className="flex justify-between items-start mb-4">
-          <h4 className="text-xl font-bold text-white tracking-tight capitalize group-hover:text-indigo-400 transition">
-            {room.roomType || 'Standard Room'}
-          </h4>
-          <div className="text-right">
-            <span className="text-xl font-extrabold text-indigo-400">${room.pricePerNight}</span>
-            <span className="text-xs text-neutral-500 block">/ night</span>
+        {/* Room Image Preview */}
+        <div className="relative aspect-[16/10] overflow-hidden bg-neutral-900">
+          <img
+            src={roomImage}
+            alt={room.roomType || 'Luxury Suite'}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
+          
+          {/* Room Type Tag */}
+          <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-md border border-white/10 px-3 py-1 rounded-xl text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-[var(--color-accent)]" />
+            <span>{room.roomType || 'Standard Suite'}</span>
+          </div>
+
+          {/* Price Badge */}
+          <div className="absolute bottom-3 right-3 bg-[var(--bg-card)]/90 backdrop-blur-md border border-[var(--border-color)] px-3 py-1.5 rounded-2xl text-right shadow-lg">
+            <div className="flex items-baseline gap-1">
+              <span className="text-lg font-black text-[var(--color-primary)]">${room.pricePerNight}</span>
+              <span className="text-[10px] text-[var(--text-muted)] font-semibold">/ night</span>
+            </div>
           </div>
         </div>
 
-        {/* Capacity / Guests */}
-        <div className="flex items-center space-x-2 text-sm text-neutral-450 mb-4" style={{ color: '#aaa' }}>
-          <svg className="w-4 h-4 text-neutral-550 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-          </svg>
-          <span>Fits up to {room.capacity || 2} {room.capacity === 1 ? 'Guest' : 'Guests'}</span>
-        </div>
+        {/* Card Body */}
+        <div className="p-6 space-y-4">
+          <div className="flex items-center justify-between">
+            <h4 className="text-xl font-bold text-[var(--text-primary)] group-hover:text-[var(--color-primary)] transition">
+              {room.roomType || 'Standard Suite'}
+            </h4>
+            {room.isAvailable !== false && (
+              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-500 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20">
+                <CheckCircle2 className="w-3 h-3" /> Available
+              </span>
+            )}
+          </div>
 
-        {/* Amenities badges */}
-        {room.amenities && room.amenities.length > 0 && (
-          <div className="mb-6">
-            <div className="flex flex-wrap gap-1.5">
+          {/* Features Row */}
+          <div className="flex items-center gap-4 text-xs text-[var(--text-secondary)] font-medium pt-1 border-t border-[var(--border-color)]">
+            <div className="flex items-center gap-1.5">
+              <Users className="w-4 h-4 text-[var(--color-primary)]" />
+              <span>{room.capacity || 2} {room.capacity === 1 ? 'Guest' : 'Guests'}</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <BedDouble className="w-4 h-4 text-[var(--color-accent)]" />
+              <span>King Bed</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <Wifi className="w-4 h-4 text-emerald-400" />
+              <span>Free WiFi</span>
+            </div>
+          </div>
+
+          {/* Amenities Badges */}
+          {room.amenities && room.amenities.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 pt-1">
               {room.amenities.map((amenity, idx) => (
                 <span
                   key={idx}
-                  className="bg-neutral-950 border border-neutral-850 text-neutral-400 text-xs px-2.5 py-1 rounded-full capitalize"
-                  style={{ borderColor: '#2c2c2c' }}
+                  className="bg-[var(--bg-card-hover)] text-[var(--text-secondary)] border border-[var(--border-color)] text-[11px] font-semibold px-2.5 py-1 rounded-xl capitalize"
                 >
                   {amenity}
                 </span>
               ))}
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
-      <button
-        onClick={() => navigate(`/booking/${room._id || room.id}`)}
-        className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 px-4 rounded-2xl hover:shadow-lg hover:shadow-indigo-500/10 border border-indigo-550 transition duration-200 text-sm cursor-pointer text-center"
-      >
-        Book Now
-      </button>
-    </div>
+      {/* Action Footer */}
+      <div className="p-6 pt-0">
+        <button
+          onClick={() => navigate(`/booking/${room._id || room.id}`)}
+          className="w-full text-white font-bold py-3 px-5 rounded-2xl shadow-lg transition-all duration-300 flex items-center justify-center gap-2 group-hover:gap-3 cursor-pointer"
+          style={{ background: 'var(--color-primary)' }}
+          onMouseEnter={e => e.currentTarget.style.background = 'var(--color-primary-hover)'}
+          onMouseLeave={e => e.currentTarget.style.background = 'var(--color-primary)'}
+        >
+          <span>Reserve Room</span>
+          <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+        </button>
+      </div>
+    </motion.div>
   );
 }
+
