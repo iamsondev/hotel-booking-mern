@@ -86,7 +86,7 @@ export default function PendingHotels() {
                 <div className="flex flex-1 flex-col md:flex-row items-start md:items-center justify-between gap-4 p-6">
                   {/* Info Block */}
                   <div className="space-y-2 flex-1">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <h3 className="text-base sm:text-lg font-extrabold text-[var(--text-primary)] tracking-tight">{hotel.name}</h3>
                       <span className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 text-[10px] uppercase px-2.5 py-0.5 rounded-full font-bold">
                         Pending Listing
@@ -97,6 +97,19 @@ export default function PendingHotels() {
                       <MapPin className="w-3.5 h-3.5 mr-1 text-[var(--color-primary)] flex-shrink-0" />
                       {hotel.address?.city || 'City unspecified'}, {hotel.address?.country || ''}
                     </p>
+
+                    {/* Room count status indicator */}
+                    <div className="pt-0.5">
+                      {(hotel.roomCount ?? 0) > 0 ? (
+                        <span className="inline-flex items-center text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full">
+                          ✓ {hotel.roomCount} room types added
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center text-xs font-semibold text-amber-600 dark:text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2.5 py-0.5 rounded-full">
+                          ⚠️ No rooms added yet
+                        </span>
+                      )}
+                    </div>
 
                     <p className="text-[var(--text-secondary)] text-xs line-clamp-2 leading-relaxed">
                       {hotel.description || 'No description provided.'}
@@ -114,15 +127,25 @@ export default function PendingHotels() {
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="flex flex-row md:flex-col gap-2 flex-shrink-0 w-full md:w-auto">
-                    <button
-                      onClick={() => handleApprove(hotelId, hotel.name)}
-                      disabled={isApproving || isRejecting}
-                      className="flex-1 md:flex-initial bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 text-xs font-bold py-2.5 px-6 rounded-xl transition cursor-pointer disabled:opacity-50 flex items-center justify-center space-x-1.5"
-                    >
-                      <CheckCircle className="w-4 h-4" />
-                      <span>Approve</span>
-                    </button>
+                  <div className="flex flex-row md:flex-col gap-2 flex-shrink-0 w-full md:w-auto items-stretch md:items-end">
+                    <div className="relative group flex-1 md:flex-initial">
+                      <button
+                        onClick={() => handleApprove(hotelId, hotel.name)}
+                        disabled={isApproving || isRejecting}
+                        className="w-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 text-xs font-bold py-2.5 px-6 rounded-xl transition cursor-pointer disabled:opacity-50 flex items-center justify-center space-x-1.5"
+                      >
+                        <CheckCircle className="w-4 h-4" />
+                        <span>Approve</span>
+                      </button>
+
+                      {/* Warning tooltip note on hover when roomCount === 0 */}
+                      {(hotel.roomCount ?? 0) === 0 && (
+                        <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 md:translate-x-0 md:left-auto md:right-0 mb-2 z-20 whitespace-nowrap bg-slate-900 dark:bg-slate-800 text-amber-400 text-[11px] font-medium px-3 py-1.5 rounded-lg shadow-xl border border-amber-500/30">
+                          Consider waiting until owner adds rooms
+                        </div>
+                      )}
+                    </div>
+
                     <button
                       onClick={() => handleReject(hotelId, hotel.name)}
                       disabled={isApproving || isRejecting}

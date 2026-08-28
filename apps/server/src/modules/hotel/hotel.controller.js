@@ -183,10 +183,20 @@ export const getPendingHotels = asyncHandler(async (req, res) => {
     .populate('owner', 'name email phone')
     .sort({ createdAt: -1 });
 
+  const data = await Promise.all(
+    hotels.map(async (hotel) => {
+      const roomCount = await Room.countDocuments({ hotel: hotel._id, isDeleted: { $ne: true } });
+      return {
+        ...hotel.toObject(),
+        roomCount,
+      };
+    })
+  );
+
   res.status(200).json({
     success: true,
-    count: hotels.length,
-    data: hotels,
+    count: data.length,
+    data,
   });
 });
 

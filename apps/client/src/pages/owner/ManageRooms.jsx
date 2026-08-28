@@ -123,6 +123,11 @@ export default function ManageRooms() {
 
   return (
     <div className="max-w-6xl mx-auto py-6 space-y-8 font-sans px-4 sm:px-6">
+      {rooms.length === 0 && (
+        <div className="bg-sky-500/10 dark:bg-sky-900/30 border border-sky-500/20 dark:border-sky-700/40 text-sky-800 dark:text-sky-200 p-4 rounded-2xl flex items-center gap-3 text-sm font-medium shadow-sm">
+          <span>🎉 Your hotel is set up! Add at least one room type so guests can start booking.</span>
+        </div>
+      )}
       <div>
         <h2 className="text-2xl sm:text-3xl font-extrabold text-[var(--text-primary)] tracking-tight">
           Manage Rooms
