@@ -36,7 +36,7 @@ export const getRoomsByHotel = asyncHandler(async (req, res) => {
   const { hotelId } = req.params;
 
   if (!hotelId) {
-    const rooms = await Room.find({ isDeleted: { $ne: true }, isActive: true })
+    const rooms = await Room.find({ isDeleted: { $ne: true } })
       .populate('hotel', 'name address starRating slug')
       .sort({ createdAt: -1 });
 

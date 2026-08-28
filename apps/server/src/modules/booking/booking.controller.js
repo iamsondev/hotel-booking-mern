@@ -94,9 +94,9 @@ export const getBookingById = asyncHandler(async (req, res) => {
     throw new ApiError(404, 'Booking not found');
   }
 
-  const isUserOwner = booking.user._id.toString() === req.user._id.toString();
-  const isHotelOwner = booking.hotel.owner.toString() === req.user._id.toString();
-  const isAdmin = req.user.role === 'admin';
+  const isUserOwner = booking.user?._id?.toString() === req.user?._id?.toString();
+  const isHotelOwner = booking.hotel?.owner?.toString() === req.user?._id?.toString();
+  const isAdmin = req.user?.role === 'admin';
 
   if (!isUserOwner && !isHotelOwner && !isAdmin) {
     throw new ApiError(403, 'Access denied. You do not have permission to view this booking');

@@ -131,20 +131,26 @@ export const updateHotel = asyncHandler(async (req, res) => {
 export const deleteHotel = asyncHandler(async (req, res) => {
   const hotelId = req.params.id;
 
+  if (!mongoose.Types.ObjectId.isValid(hotelId)) {
+    throw new ApiError(400, 'Invalid Hotel ID format');
+  }
+
   const hotel = await Hotel.findById(hotelId);
   if (!hotel) {
     throw new ApiError(404, 'Hotel not found');
   }
 
-  // 2. Find all rooms under this hotel
+  // Find all rooms under this hotel
   const rooms = await Room.find({ hotel: hotelId }).select('_id');
   const roomIds = rooms.map((room) => room._id);
 
-  // 3. Check if any booking exists for these room IDs
-  const hasBooking = roomIds.length > 0 ? await Booking.exists({ room: { $in: roomIds } }) : false;
+  // Check if any booking exists for this hotel or its rooms
+  const hasHotelBooking = await Booking.exists({ hotel: hotelId });
+  const hasRoomBooking = roomIds.length > 0 ? await Booking.exists({ room: { $in: roomIds } }) : false;
+  const hasBooking = Boolean(hasHotelBooking || hasRoomBooking);
 
   if (!hasBooking) {
-    // 4. No bookings: Permanent delete
+    // No bookings: Permanent delete
     await Room.deleteMany({ hotel: hotelId });
     await Hotel.findByIdAndDelete(hotelId);
 
@@ -153,9 +159,9 @@ export const deleteHotel = asyncHandler(async (req, res) => {
       message: 'Hotel permanently deleted',
     });
   } else {
-    // 5. Booking exists: Soft delete (deactivate hotel and rooms)
+    // Booking exists: Soft delete (deactivate hotel and rooms)
     await Hotel.findByIdAndUpdate(hotelId, { isDeleted: true, status: 'suspended' });
-    await Room.updateMany({ hotel: hotelId }, { isActive: false });
+    await Room.updateMany({ hotel: hotelId }, { isActive: false, isDeleted: true });
 
     return res.status(200).json({
       success: true,

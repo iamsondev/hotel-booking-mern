@@ -6,18 +6,22 @@ import Hotel from '../modules/hotel/hotel.model.js';
 import Room from '../modules/room/room.model.js';
 
 export const isHotelOwnerOf = asyncHandler(async (req, res, next) => {
-  let hotelId = req.params.hotelId || req.params.id || req.body.hotel;
+  let hotelId = req.params?.hotelId || req.body?.hotel;
+  const targetId = req.params?.roomId || req.params?.id;
 
-  // If roomId is provided, find the room first to get the associated hotelId
-  if (!hotelId && req.params.roomId) {
-    if (!mongoose.Types.ObjectId.isValid(req.params.roomId)) {
-      throw new ApiError(400, 'Invalid Room ID format');
+  // If hotelId is not directly provided, resolve targetId (Room ID or Hotel ID)
+  if (!hotelId && targetId) {
+    if (!mongoose.Types.ObjectId.isValid(targetId)) {
+      throw new ApiError(400, 'Invalid ID format');
     }
-    const room = await Room.findById(req.params.roomId);
-    if (!room) {
-      throw new ApiError(404, 'Room not found');
+
+    // Check if targetId is a Room ID
+    const room = await Room.findById(targetId);
+    if (room) {
+      hotelId = room.hotel;
+    } else {
+      hotelId = targetId;
     }
-    hotelId = room.hotel;
   }
 
   if (!hotelId) {
@@ -34,13 +38,13 @@ export const isHotelOwnerOf = asyncHandler(async (req, res, next) => {
   }
 
   // Admin bypass check
-  if (req.user.role === 'admin') {
+  if (req.user?.role === 'admin') {
     req.hotel = hotel;
     return next();
   }
 
   // Check if current user is the owner of the hotel
-  if (hotel.owner.toString() !== req.user._id.toString()) {
+  if (!hotel.owner || !req.user?._id || hotel.owner.toString() !== req.user._id.toString()) {
     throw new ApiError(403, 'Access denied. You do not own this hotel resource');
   }
 
