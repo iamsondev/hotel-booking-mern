@@ -6,8 +6,16 @@ export const paymentApiSlice = apiSlice.injectEndpoints({
       query: (bookingId) => ({
         url: '/payments/create-intent',
         method: 'POST',
-        body: { bookingId },
+        body: typeof bookingId === 'object' && bookingId !== null ? bookingId : { bookingId },
       }),
+    }),
+    confirmPayment: builder.mutation({
+      query: (bookingId) => ({
+        url: '/payments/confirm',
+        method: 'POST',
+        body: typeof bookingId === 'object' && bookingId !== null ? bookingId : { bookingId },
+      }),
+      invalidatesTags: ['Booking', 'Hotel'],
     }),
     getPaymentByBooking: builder.query({
       query: (bookingId) => `/payments/booking/${bookingId}`,
@@ -17,5 +25,6 @@ export const paymentApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useCreatePaymentIntentMutation,
+  useConfirmPaymentMutation,
   useGetPaymentByBookingQuery,
 } = paymentApiSlice;

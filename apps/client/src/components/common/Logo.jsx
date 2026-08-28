@@ -1,17 +1,20 @@
 import { Link } from 'react-router-dom';
-import { Home } from 'lucide-react';
 
 export default function Logo({ className = '' }) {
   return (
-    <Link to="/" className={`inline-flex items-center space-x-2.5 group ${className}`}>
-      <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition-transform duration-300">
-        <Home className="w-5 h-5 text-white" />
+    <Link to="/" className={`inline-flex items-center gap-2.5 group select-none ${className}`}>
+      {/* Icon mark */}
+      <div className="w-9 h-9 rounded-xl bg-[var(--color-primary)] flex items-center justify-center shadow-md group-hover:opacity-90 transition">
+        <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 9.5L12 3L21 9.5V20C21 20.55 20.55 21 20 21H15V15H9V21H4C3.45 21 3 20.55 3 20V9.5Z" fill="white" />
+          <rect x="9" y="15" width="6" height="6" fill="white" opacity="0.4" />
+        </svg>
       </div>
-      <div className="flex flex-col">
-        <span className="text-xl font-black tracking-tight text-white dark:text-white light:text-slate-900 group-hover:opacity-90 transition">
-          Get<span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">Nest</span>
-        </span>
-      </div>
+      {/* Wordmark */}
+      <span className="text-[1.3rem] font-black tracking-tight leading-none">
+        <span className="text-[var(--text-primary)]">Get</span>
+        <span className="text-[var(--color-primary)]">Nest</span>
+      </span>
     </Link>
   );
 }

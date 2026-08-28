@@ -1,1 +1,133 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;1,600&display=swap');
+
+@layer base {
+  /* ─────────────────────────────────────────────────────
+     LIGHT MODE  ·  Warm Ivory + Forest Green + Gold
+  ───────────────────────────────────────────────────── */
+  :root {
+    --bg-main:        #FAF8F4;
+    --bg-card:        #FFFFFF;
+    --bg-card-hover:  #F5F1EA;
+    --bg-input:       #F0EBE3;
+    --border-color:   #E8E0D5;
+
+    --text-primary:   #1C1409;
+    --text-secondary: #6B5B4E;
+    --text-muted:     #A0907F;
+
+    --color-primary:        #1B4332;
+    --color-primary-hover:  #0F3524;
+    --color-accent:         #C9A96E;
+    --color-accent-hover:   #B8914F;
+
+    --status-success: #2D6A4F;
+    --status-warning: #D4A017;
+    --status-error:   #C0392B;
+
+    --shadow-card: 0 2px 16px 0 rgba(28,20,9,0.07);
+    --shadow-lg:   0 8px 40px 0 rgba(28,20,9,0.12);
+  }
+
+  /* ─────────────────────────────────────────────────────
+     DARK MODE  ·  Midnight Espresso + Sage + Gold Glow
+  ───────────────────────────────────────────────────── */
+  html.dark {
+    --bg-main:        #100E0A;
+    --bg-card:        #1A1712;
+    --bg-card-hover:  #252018;
+    --bg-input:       #20201A;
+    --border-color:   #2E2820;
+
+    --text-primary:   #F0E8DA;
+    --text-secondary: #A8998B;
+    --text-muted:     #6B5B4E;
+
+    --color-primary:        #52B788;
+    --color-primary-hover:  #74C69D;
+    --color-accent:         #D4A847;
+    --color-accent-hover:   #E8C060;
+
+    --status-success: #52B788;
+    --status-warning: #D4A847;
+    --status-error:   #E57373;
+
+    --shadow-card: 0 2px 16px 0 rgba(0,0,0,0.40);
+    --shadow-lg:   0 8px 40px 0 rgba(0,0,0,0.60);
+  }
+
+  /* ── Global Resets & Base ── */
+  *, *::before, *::after { box-sizing: border-box; }
+
+  body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    transition: background-color 0.35s ease, color 0.35s ease;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Native date picker theming */
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 0.5;
+    cursor: pointer;
+    filter: var(--cal-icon-filter, none);
+    border-radius: 4px;
+    padding: 2px;
+  }
+  input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 0.9;
+  }
+
+  /* Light mode — browser uses light calendar popup */
+  input[type="date"] {
+    color-scheme: light;
+  }
+
+  /* Dark mode — force browser calendar popup to dark */
+  html.dark input[type="date"] {
+    color-scheme: dark;
+    filter: none;
+  }
+  html.dark input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.8) sepia(0.3) hue-rotate(20deg) brightness(1.2);
+    opacity: 0.8;
+  }
+}
+
+
+/* ── Reusable Utility Classes ── */
+.bg-theme-main       { background-color: var(--bg-main); }
+.bg-theme-card       { background-color: var(--bg-card); }
+.bg-theme-card-hover { background-color: var(--bg-card-hover); }
+.border-theme        { border-color: var(--border-color); }
+.text-theme-primary   { color: var(--text-primary); }
+.text-theme-secondary { color: var(--text-secondary); }
+.text-theme-muted     { color: var(--text-muted); }
+.text-brand           { color: var(--color-primary); }
+.text-accent          { color: var(--color-accent); }
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: #FFFFFF;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+.btn-primary:hover { background-color: var(--color-primary-hover); }
+
+.btn-accent {
+  background-color: var(--color-accent);
+  color: #FFFFFF;
+  transition: background-color 0.2s ease;
+}
+.btn-accent:hover { background-color: var(--color-accent-hover); }
+
+.card-base {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-card);
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+.card-base:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}

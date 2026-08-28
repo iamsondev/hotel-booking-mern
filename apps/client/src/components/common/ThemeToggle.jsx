@@ -6,17 +6,21 @@ export default function ThemeToggle({ className = '' }) {
 
   return (
     <button
-      onClick={toggleTheme}
       type="button"
-      className={`p-2 rounded-2xl border border-neutral-800 bg-neutral-900 text-neutral-300 hover:text-white hover:border-neutral-700 transition duration-200 cursor-pointer ${className}`}
+      onClick={(e) => { e.preventDefault(); toggleTheme(); }}
       title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
       aria-label="Toggle theme"
+      className={`
+        w-9 h-9 rounded-xl border border-[var(--border-color)] bg-[var(--bg-card)]
+        flex items-center justify-center
+        hover:bg-[var(--bg-card-hover)] transition-all duration-200 cursor-pointer shadow-sm
+        ${className}
+      `}
     >
-      {theme === 'dark' ? (
-        <Sun className="w-4 h-4 text-amber-400" />
-      ) : (
-        <Moon className="w-4 h-4 text-indigo-400" />
-      )}
+      {theme === 'dark'
+        ? <Sun  className="w-4 h-4 text-[var(--color-accent)]" />
+        : <Moon className="w-4 h-4 text-[var(--color-primary)]" />
+      }
     </button>
   );
 }

@@ -10,7 +10,8 @@ import { createPaymentIntent as stripeCreateIntent, constructWebhookEvent } from
 // @desc    Create Stripe PaymentIntent for a pending booking (User)
 // @route   POST /api/payments/create-intent
 export const createPaymentIntent = asyncHandler(async (req, res) => {
-  const { bookingId } = req.body;
+  const rawId = req.body?.bookingId || req.body;
+  const bookingId = typeof rawId === 'object' ? rawId?.bookingId : rawId;
 
   if (!bookingId || !mongoose.Types.ObjectId.isValid(bookingId)) {
     throw new ApiError(400, 'Valid Booking ID is required');
@@ -21,12 +22,21 @@ export const createPaymentIntent = asyncHandler(async (req, res) => {
     throw new ApiError(404, 'Booking not found');
   }
 
-  if (booking.user.toString() !== req.user._id.toString()) {
+  if (booking.user.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
     throw new ApiError(403, 'Access denied. You can only pay for your own bookings');
   }
 
   if (booking.paymentStatus === 'paid' || booking.status === 'confirmed') {
-    throw new ApiError(400, 'This booking has already been paid and confirmed');
+    return res.status(200).json({
+      success: true,
+      alreadyPaid: true,
+      message: 'This booking has already been paid and confirmed.',
+      data: {
+        bookingId: booking._id,
+        status: booking.status,
+        paymentStatus: booking.paymentStatus,
+      },
+    });
   }
 
   if (booking.status === 'cancelled') {
@@ -154,5 +164,48 @@ export const getPaymentByBooking = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     data: payment,
+  });
+});
+
+// @desc    Confirm payment & update booking status to paid and confirmed (Client confirmation)
+// @route   POST /api/payments/confirm
+export const confirmPayment = asyncHandler(async (req, res) => {
+  const rawId = req.body?.bookingId || req.body;
+  const bookingId = typeof rawId === 'object' ? rawId?.bookingId : rawId;
+
+  if (!bookingId || !mongoose.Types.ObjectId.isValid(bookingId)) {
+    throw new ApiError(400, 'Valid Booking ID is required');
+  }
+
+  const booking = await Booking.findById(bookingId);
+  if (!booking) {
+    throw new ApiError(404, 'Booking not found');
+  }
+
+  if (booking.user.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+    throw new ApiError(403, 'Access denied');
+  }
+
+  booking.paymentStatus = 'paid';
+  booking.status = 'confirmed';
+  await booking.save();
+
+  // Create or update payment record to succeeded
+  await Payment.findOneAndUpdate(
+    { booking: booking._id },
+    {
+      user: booking.user,
+      amount: Math.round(booking.totalPrice * 100),
+      currency: 'usd',
+      status: 'succeeded',
+      paymentMethod: 'card',
+    },
+    { upsert: true, new: true }
+  );
+
+  res.status(200).json({
+    success: true,
+    message: 'Payment confirmed & reservation activated successfully',
+    data: booking,
   });
 });

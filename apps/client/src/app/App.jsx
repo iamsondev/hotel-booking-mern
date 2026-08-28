@@ -4,7 +4,10 @@ import AppRoutes from '../routes/AppRoutes';
 
 export default function App() {
   return (
-    <div className="flex flex-col min-h-screen bg-neutral-950 text-neutral-100 font-sans" style={{ background: '#0a0a0a' }}>
+    <div
+      className="flex flex-col min-h-screen font-sans transition-colors duration-300"
+      style={{ backgroundColor: 'var(--bg-main)', color: 'var(--text-primary)' }}
+    >
       <Navbar />
       <main className="flex-grow max-w-7xl w-full mx-auto px-4 py-8">
         <AppRoutes />

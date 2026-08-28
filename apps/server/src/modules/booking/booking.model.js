@@ -76,7 +76,9 @@ bookingSchema.pre('save', function (next) {
     const randomHex = Math.floor(10000 + Math.random() * 90000);
     this.bookingReference = `HB-${dateStr}-${randomHex}`;
   }
-  next();
+  if (typeof next === 'function') {
+    next();
+  }
 });
 
 const Booking = mongoose.model('Booking', bookingSchema);

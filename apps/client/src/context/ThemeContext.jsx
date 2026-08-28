@@ -4,23 +4,30 @@ const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('getnest_theme') || 'dark';
+    try {
+      const savedTheme = localStorage.getItem('getnest_theme');
+      return savedTheme ? savedTheme : 'dark';
+    } catch {
+      return 'dark';
+    }
   });
 
   useEffect(() => {
-    const root = window.document.documentElement;
+    const root = document.documentElement;
     if (theme === 'dark') {
       root.classList.add('dark');
       root.classList.remove('light');
+      root.style.colorScheme = 'dark';
     } else {
-      root.classList.add('light');
       root.classList.remove('dark');
+      root.classList.add('light');
+      root.style.colorScheme = 'light';
     }
     localStorage.setItem('getnest_theme', theme);
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+    setTheme((prevTheme) => (prevTheme === 'dark' ? 'light' : 'dark'));
   };
 
   return (
@@ -31,5 +38,9 @@ export function ThemeProvider({ children }) {
 }
 
 export function useTheme() {
-  return useContext(ThemeContext);
+  const context = useContext(ThemeContext);
+  if (!context) {
+    throw new Error('useTheme must be used within a ThemeProvider');
+  }
+  return context;
 }

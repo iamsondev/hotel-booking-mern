@@ -1,12 +1,14 @@
 import { Link } from 'react-router-dom';
 import { useGetPendingHotelsQuery } from '../../features/hotels/hotelApiSlice';
 import { useGetAllBookingsQuery } from '../../features/bookings/bookingApiSlice';
+import { useGetAllRoomsQuery } from '../../features/rooms/roomApiSlice';
 import Loader from '../../components/common/Loader';
-import { ShieldCheck, Hotel, CalendarCheck, Clock, ArrowRight, TrendingUp, DollarSign, Activity } from 'lucide-react';
+import { ShieldCheck, Hotel, CalendarCheck, Clock, ArrowRight, TrendingUp, DollarSign, Activity, BedDouble } from 'lucide-react';
 
 export default function AdminDashboard() {
   const { data: pendingResponse, isLoading: isPendingLoading } = useGetPendingHotelsQuery();
   const { data: bookingsResponse, isLoading: isBookingsLoading } = useGetAllBookingsQuery();
+  const { data: roomsResponse, isLoading: isRoomsLoading } = useGetAllRoomsQuery();
 
   const pendingHotels = Array.isArray(pendingResponse)
     ? pendingResponse
@@ -16,8 +18,15 @@ export default function AdminDashboard() {
     ? bookingsResponse
     : bookingsResponse?.data || bookingsResponse?.bookings || [];
 
+  const allRooms = Array.isArray(roomsResponse)
+    ? roomsResponse
+    : roomsResponse?.data || roomsResponse?.rooms || [];
+
   const totalPending = pendingHotels.length;
   const totalBookings = allBookings.length;
+  const totalRoomTypes = allRooms.length;
+
+  const totalPhysicalRooms = allRooms.reduce((sum, room) => sum + (Number(room.totalRooms) || 1), 0);
   
   const confirmedBookings = Array.isArray(allBookings)
     ? allBookings.filter((b) => b.status?.toLowerCase() === 'confirmed').length
@@ -29,7 +38,7 @@ export default function AdminDashboard() {
         .reduce((sum, b) => sum + (b.totalPrice || 0), 0)
     : 0;
 
-  if (isPendingLoading || isBookingsLoading) return <Loader />;
+  if (isPendingLoading || isBookingsLoading || isRoomsLoading) return <Loader />;
 
   return (
     <div className="max-w-7xl mx-auto space-y-8 py-6 px-4 sm:px-6 font-sans">
@@ -72,61 +81,75 @@ export default function AdminDashboard() {
       </div>
 
       {/* Analytics KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        <div className="bg-[var(--bg-card)] border border-[var(--border-color)] hover:border-amber-500/50 rounded-3xl p-6 transition duration-300 shadow-sm space-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div className="bg-[var(--bg-card)] border border-[var(--border-color)] hover:border-amber-500/50 rounded-3xl p-5 transition duration-300 shadow-sm space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">Pending Approval</span>
-            <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-2xl text-amber-600 dark:text-amber-400">
-              <Clock className="w-5 h-5" />
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">Pending Approval</span>
+            <div className="p-2.5 bg-amber-500/10 border border-amber-500/20 rounded-2xl text-amber-600 dark:text-amber-400">
+              <Clock className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
           </div>
           <div className="flex items-baseline justify-between">
-            <span className="text-3xl font-extrabold text-amber-600 dark:text-amber-400">{totalPending}</span>
+            <span className="text-2xl sm:text-3xl font-extrabold text-amber-600 dark:text-amber-400">{totalPending}</span>
             <span className="text-xs text-[var(--text-muted)] font-medium">Listings</span>
           </div>
-          <p className="text-[11px] text-[var(--text-muted)]">Requires verification review</p>
+          <p className="text-[11px] text-[var(--text-muted)]">Requires review</p>
         </div>
 
-        <div className="bg-[var(--bg-card)] border border-[var(--border-color)] hover:border-[var(--color-primary)]/50 rounded-3xl p-6 transition duration-300 shadow-sm space-y-4">
+        <div className="bg-[var(--bg-card)] border border-[var(--border-color)] hover:border-cyan-500/50 rounded-3xl p-5 transition duration-300 shadow-sm space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">Total Bookings</span>
-            <div className="p-3 bg-[var(--color-primary)]/10 border border-[var(--color-primary)]/20 rounded-2xl text-[var(--color-primary)]">
-              <CalendarCheck className="w-5 h-5" />
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">Total System Rooms</span>
+            <div className="p-2.5 bg-cyan-500/10 border border-cyan-500/20 rounded-2xl text-cyan-600 dark:text-cyan-400">
+              <BedDouble className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
           </div>
           <div className="flex items-baseline justify-between">
-            <span className="text-3xl font-extrabold text-[var(--text-primary)]">{totalBookings}</span>
+            <span className="text-2xl sm:text-3xl font-extrabold text-cyan-600 dark:text-cyan-400">{totalPhysicalRooms}</span>
+            <span className="text-xs text-[var(--text-muted)] font-medium">{totalRoomTypes} Types</span>
+          </div>
+          <p className="text-[11px] text-[var(--text-muted)]">Total inventory capacity</p>
+        </div>
+
+        <div className="bg-[var(--bg-card)] border border-[var(--border-color)] hover:border-[var(--color-primary)]/50 rounded-3xl p-5 transition duration-300 shadow-sm space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">Total Bookings</span>
+            <div className="p-2.5 bg-[var(--color-primary)]/10 border border-[var(--color-primary)]/20 rounded-2xl text-[var(--color-primary)]">
+              <CalendarCheck className="w-4 h-4 sm:w-5 sm:h-5" />
+            </div>
+          </div>
+          <div className="flex items-baseline justify-between">
+            <span className="text-2xl sm:text-3xl font-extrabold text-[var(--text-primary)]">{totalBookings}</span>
             <span className="text-xs text-[var(--text-muted)] font-medium">Reservations</span>
           </div>
-          <p className="text-[11px] text-[var(--text-muted)]">Across all partner hotels</p>
+          <p className="text-[11px] text-[var(--text-muted)]">Across all hotels</p>
         </div>
 
-        <div className="bg-[var(--bg-card)] border border-[var(--border-color)] hover:border-emerald-500/50 rounded-3xl p-6 transition duration-300 shadow-sm space-y-4">
+        <div className="bg-[var(--bg-card)] border border-[var(--border-color)] hover:border-emerald-500/50 rounded-3xl p-5 transition duration-300 shadow-sm space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">Active Confirmed</span>
-            <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl text-emerald-600 dark:text-emerald-400">
-              <TrendingUp className="w-5 h-5" />
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">Active Confirmed</span>
+            <div className="p-2.5 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl text-emerald-600 dark:text-emerald-400">
+              <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
           </div>
           <div className="flex items-baseline justify-between">
-            <span className="text-3xl font-extrabold text-emerald-600 dark:text-emerald-400">{confirmedBookings}</span>
+            <span className="text-2xl sm:text-3xl font-extrabold text-emerald-600 dark:text-emerald-400">{confirmedBookings}</span>
             <span className="text-xs text-[var(--text-muted)] font-medium">Confirmed</span>
           </div>
-          <p className="text-[11px] text-[var(--text-muted)]">Validated & ready guests</p>
+          <p className="text-[11px] text-[var(--text-muted)]">Validated guests</p>
         </div>
 
-        <div className="bg-[var(--bg-card)] border border-[var(--border-color)] hover:border-purple-500/50 rounded-3xl p-6 transition duration-300 shadow-sm space-y-4">
+        <div className="bg-[var(--bg-card)] border border-[var(--border-color)] hover:border-purple-500/50 rounded-3xl p-5 transition duration-300 shadow-sm space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">Paid Revenue</span>
-            <div className="p-3 bg-purple-500/10 border border-purple-500/20 rounded-2xl text-purple-600 dark:text-purple-400">
-              <DollarSign className="w-5 h-5" />
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">Paid Revenue</span>
+            <div className="p-2.5 bg-purple-500/10 border border-purple-500/20 rounded-2xl text-purple-600 dark:text-purple-400">
+              <DollarSign className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
           </div>
           <div className="flex items-baseline justify-between">
-            <span className="text-3xl font-extrabold text-purple-600 dark:text-purple-400">${totalRevenue.toLocaleString()}</span>
+            <span className="text-2xl sm:text-3xl font-extrabold text-purple-600 dark:text-purple-400">${totalRevenue.toLocaleString()}</span>
             <span className="text-xs text-[var(--text-muted)] font-medium">USD</span>
           </div>
-          <p className="text-[11px] text-[var(--text-muted)]">Settled Stripe payments</p>
+          <p className="text-[11px] text-[var(--text-muted)]">Stripe payments</p>
         </div>
       </div>
 

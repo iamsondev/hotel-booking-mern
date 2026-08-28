@@ -113,7 +113,17 @@ export const getBookingById = asyncHandler(async (req, res) => {
 export const getHotelBookings = asyncHandler(async (req, res) => {
   const { hotelId } = req.params;
 
-  const bookings = await Booking.find({ hotel: hotelId })
+  let targetHotelId = hotelId;
+
+  if (!mongoose.Types.ObjectId.isValid(hotelId)) {
+    const hotel = await Hotel.findOne({ slug: hotelId });
+    if (!hotel) {
+      throw new ApiError(400, 'Invalid Hotel ID or Slug format');
+    }
+    targetHotelId = hotel._id;
+  }
+
+  const bookings = await Booking.find({ hotel: targetHotelId })
     .populate('user', 'name email phone')
     .populate('room', 'roomType pricePerNight')
     .sort({ createdAt: -1 });

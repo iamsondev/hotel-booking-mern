@@ -1,44 +1,51 @@
-import { Link } from 'react-router-dom';
+import Logo from './Logo';
 
 const footerLinks = [
   { label: 'Browse Hotels', to: '/' },
-  { label: 'Login', to: '/login' },
+  { label: 'Sign In', to: '/login' },
   { label: 'Register', to: '/register' },
   { label: 'My Bookings', to: '/my-bookings' },
 ];
 
+import { Link as RouterLink } from 'react-router-dom';
+
 export default function Footer() {
   return (
-    <footer className="bg-neutral-900 border-t border-neutral-850 mt-auto" style={{ borderColor: '#1c1c1c' }}>
+    <footer
+      className="border-t mt-auto transition-colors duration-300"
+      style={{ backgroundColor: 'var(--bg-card)', borderColor: 'var(--border-color)' }}
+    >
       <div className="max-w-7xl mx-auto px-6 py-10">
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
           {/* Brand */}
-          <div className="text-center md:text-left">
-            <span className="text-xl font-extrabold tracking-tight">
-              <span className="text-white">Stay</span>
-              <span className="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">Ease</span>
-            </span>
-            <p className="text-neutral-500 text-xs mt-1">Find your perfect stay, anywhere.</p>
+          <div className="text-center md:text-left space-y-1">
+            <Logo />
+            <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
+              Your gateway to the world's finest stays.
+            </p>
           </div>
 
-          {/* Navigation Links */}
+          {/* Nav */}
           <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2">
             {footerLinks.map((link) => (
-              <Link
+              <RouterLink
                 key={link.to}
                 to={link.to}
-                className="text-neutral-500 hover:text-indigo-400 text-sm transition duration-150"
+                className="text-sm font-medium transition-colors duration-150"
+                style={{ color: 'var(--text-secondary)' }}
+                onMouseEnter={e => e.currentTarget.style.color = 'var(--color-primary)'}
+                onMouseLeave={e => e.currentTarget.style.color = 'var(--text-secondary)'}
               >
                 {link.label}
-              </Link>
+              </RouterLink>
             ))}
           </nav>
         </div>
 
-        {/* Divider */}
-        <div className="border-t border-neutral-850 mt-8 pt-6 text-center" style={{ borderColor: '#1c1c1c' }}>
-          <p className="text-neutral-600 text-xs">
-            © {new Date().getFullYear()} StayEase. All rights reserved. Built with ❤️ using React & Redux Toolkit.
+        {/* Bottom bar */}
+        <div className="border-t mt-8 pt-6 text-center" style={{ borderColor: 'var(--border-color)' }}>
+          <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+            © {new Date().getFullYear()} GetNest. All rights reserved.
           </p>
         </div>
       </div>

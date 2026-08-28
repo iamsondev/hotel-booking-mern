@@ -7,6 +7,11 @@ export const roomApiSlice = apiSlice.injectEndpoints({
       transformResponse: (response) => response.data || response.rooms || (Array.isArray(response) ? response : []),
       providesTags: ['Room'],
     }),
+    getAllRooms: builder.query({
+      query: () => '/rooms',
+      transformResponse: (response) => response.data || response.rooms || (Array.isArray(response) ? response : []),
+      providesTags: ['Room'],
+    }),
     getRoomById: builder.query({
       query: (id) => `/rooms/${id}`,
     }),
@@ -38,6 +43,7 @@ export const roomApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useGetRoomsByHotelQuery,
+  useGetAllRoomsQuery,
   useGetRoomByIdQuery,
   useCreateRoomMutation,
   useUpdateRoomMutation,

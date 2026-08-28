@@ -7,6 +7,11 @@ export const hotelApiSlice = apiSlice.injectEndpoints({
         url: '/hotels',
         params, // page, limit, city, search
       }),
+      transformResponse: (response) => ({
+        hotels: response.data || [],
+        total: response.pagination?.total || response.count || 0,
+        totalPages: response.pagination?.pages || 1,
+      }),
       providesTags: (result) => {
         if (result && result.hotels) {
           return [
@@ -19,6 +24,7 @@ export const hotelApiSlice = apiSlice.injectEndpoints({
     }),
     getHotelById: builder.query({
       query: (id) => `/hotels/${id}`,
+      transformResponse: (response) => response.data,
       providesTags: (result, error, id) => [{ type: 'Hotel', id }],
     }),
     createHotel: builder.mutation({
@@ -46,10 +52,12 @@ export const hotelApiSlice = apiSlice.injectEndpoints({
     }),
     getMyHotels: builder.query({
       query: () => '/hotels/owner/my-hotels',
+      transformResponse: (response) => response.data || [],
       providesTags: ['Hotel'],
     }),
     getPendingHotels: builder.query({
       query: () => '/hotels/admin/pending',
+      transformResponse: (response) => response.data || [],
       providesTags: ['Hotel'],
     }),
     approveHotel: builder.mutation({

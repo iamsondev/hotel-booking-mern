@@ -14,4 +14,6 @@ export const createBookingSchema = z.object({
     children: z.number().min(0).default(0),
   }),
   numberOfRooms: z.number().min(1, 'At least 1 room is required').default(1),
+  totalPrice: z.number().min(0).optional(),
 });
+

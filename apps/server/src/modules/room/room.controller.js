@@ -2,6 +2,7 @@
 import asyncHandler from 'express-async-handler';
 import mongoose from 'mongoose';
 import Room from './room.model.js';
+import Hotel from '../hotel/hotel.model.js';
 import Booking from '../booking/booking.model.js';
 import ApiError from '../../utils/ApiError.js';
 import { createRoomSchema, updateRoomSchema } from './room.validation.js';
@@ -29,16 +30,34 @@ export const createRoom = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc    Get all active rooms for a hotel (Public)
-// @route   GET /api/hotels/:hotelId/rooms
+// @desc    Get active rooms for a hotel or all rooms across system if no hotelId specified
+// @route   GET /api/hotels/:hotelId/rooms OR GET /api/rooms
 export const getRoomsByHotel = asyncHandler(async (req, res) => {
   const { hotelId } = req.params;
 
-  if (!mongoose.Types.ObjectId.isValid(hotelId)) {
-    throw new ApiError(400, 'Invalid Hotel ID format');
+  if (!hotelId) {
+    const rooms = await Room.find({ isDeleted: { $ne: true }, isActive: true })
+      .populate('hotel', 'name address starRating slug')
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      count: rooms.length,
+      data: rooms,
+    });
   }
 
-  const rooms = await Room.find({ hotel: hotelId, isDeleted: { $ne: true }, isActive: true }).sort({ pricePerNight: 1 });
+  let targetHotelId = hotelId;
+
+  if (!mongoose.Types.ObjectId.isValid(hotelId)) {
+    const hotel = await Hotel.findOne({ slug: hotelId, isDeleted: { $ne: true } });
+    if (!hotel) {
+      throw new ApiError(400, 'Invalid Hotel ID or Slug');
+    }
+    targetHotelId = hotel._id;
+  }
+
+  const rooms = await Room.find({ hotel: targetHotelId, isDeleted: { $ne: true }, isActive: true }).sort({ pricePerNight: 1 });
 
   res.status(200).json({
     success: true,
