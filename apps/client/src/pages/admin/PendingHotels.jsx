@@ -2,6 +2,7 @@ import { useGetPendingHotelsQuery, useApproveHotelMutation, useRejectHotelMutati
 import { toast } from 'react-hot-toast';
 import Loader from '../../components/common/Loader';
 import { MapPin, CheckCircle, XCircle, Building2 } from 'lucide-react';
+import { confirmDelete } from '../../utils/confirmDialog';
 
 export default function PendingHotels() {
   const { data: pendingResponse, isLoading, error } = useGetPendingHotelsQuery();
@@ -22,7 +23,13 @@ export default function PendingHotels() {
   };
 
   const handleReject = async (hotelId, hotelName) => {
-    if (!window.confirm(`Reject "${hotelName}"? The owner will need to resubmit.`)) return;
+    const isConfirmed = await confirmDelete({
+      title: 'Reject Hotel Submission?',
+      text: `Are you sure you want to reject "${hotelName}"? The owner will need to resubmit.`,
+      confirmButtonText: 'Yes, Reject',
+    });
+    if (!isConfirmed) return;
+
     try {
       await rejectHotel(hotelId).unwrap();
       toast.success(`"${hotelName}" has been rejected.`);

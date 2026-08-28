@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import Loader from '../components/common/Loader';
 import { Ticket, Calendar, DollarSign, CreditCard, XCircle, Hotel, ArrowRight } from 'lucide-react';
+import { confirmDelete } from '../utils/confirmDialog';
 
 export default function MyBookings() {
   const navigate = useNavigate();
@@ -20,7 +21,14 @@ export default function MyBookings() {
   const unpaidBookings = bookings.filter((b) => b.paymentStatus?.toLowerCase() === 'unpaid').length;
 
   const handleCancel = async (bookingId) => {
-    if (!window.confirm('Are you sure you want to cancel this reservation?')) return;
+    const isConfirmed = await confirmDelete({
+      title: 'Cancel Reservation?',
+      text: 'Are you sure you want to cancel this booking stay?',
+      confirmButtonText: 'Yes, Cancel Stay',
+      icon: 'warning',
+    });
+    if (!isConfirmed) return;
+
     try {
       await cancelBooking(bookingId).unwrap();
       toast.success('Booking cancelled successfully');

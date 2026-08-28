@@ -9,6 +9,7 @@ import {
 import { toast } from 'react-hot-toast';
 import Loader from '../../components/common/Loader';
 import CloudinaryImageUpload from '../../components/common/CloudinaryImageUpload';
+import { confirmDelete } from '../../utils/confirmDialog';
 
 export default function ManageRooms() {
   const { hotelId } = useParams();
@@ -102,7 +103,13 @@ export default function ManageRooms() {
   };
 
   const handleDelete = async (roomId) => {
-    if (!window.confirm('Are you sure you want to delete this room type?')) return;
+    const isConfirmed = await confirmDelete({
+      title: 'Delete Room Category?',
+      text: 'Are you sure you want to delete or deactivate this room type?',
+      confirmButtonText: 'Yes, Delete',
+    });
+    if (!isConfirmed) return;
+
     try {
       const res = await deleteRoom(roomId).unwrap();
       toast.success(res?.message || 'Room type deleted successfully');

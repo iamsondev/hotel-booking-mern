@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import Loader from '../../components/common/Loader';
 import CloudinaryImageUpload from '../../components/common/CloudinaryImageUpload';
 import { toast } from 'react-hot-toast';
+import { confirmDelete } from '../../utils/confirmDialog';
 
 export default function MyHotels() {
   const { user } = useSelector((state) => state.auth);
@@ -66,13 +67,18 @@ export default function MyHotels() {
   };
 
   const handleDelete = async (hotelId) => {
-    if (window.confirm('This will delete the hotel or deactivate it if bookings exist. Continue?')) {
-      try {
-        const res = await deleteHotel(hotelId).unwrap();
-        toast.success(res?.message || 'Hotel request processed successfully');
-      } catch (err) {
-        toast.error(err?.data?.message || err?.error || 'Failed to process hotel deletion');
-      }
+    const isConfirmed = await confirmDelete({
+      title: 'Delete Hotel Listing?',
+      text: 'This will permanently delete the hotel or deactivate it if active bookings exist.',
+      confirmButtonText: 'Yes, Delete',
+    });
+    if (!isConfirmed) return;
+
+    try {
+      const res = await deleteHotel(hotelId).unwrap();
+      toast.success(res?.message || 'Hotel request processed successfully');
+    } catch (err) {
+      toast.error(err?.data?.message || err?.error || 'Failed to process hotel deletion');
     }
   };
 

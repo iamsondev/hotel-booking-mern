@@ -2,6 +2,7 @@ import { useGetPendingOwnersQuery, useApproveOwnerMutation, useRejectOwnerMutati
 import { toast } from 'react-hot-toast';
 import Loader from '../../components/common/Loader';
 import { UserCheck, UserX, Mail, Phone, Calendar, ShieldAlert } from 'lucide-react';
+import { confirmDelete } from '../../utils/confirmDialog';
 
 export default function PendingVendors() {
   const { data: pendingResponse, isLoading, error } = useGetPendingOwnersQuery();
@@ -22,7 +23,13 @@ export default function PendingVendors() {
   };
 
   const handleReject = async (userId, userName) => {
-    if (!window.confirm(`Reject vendor application for "${userName}"? Account will be demoted to standard user.`)) return;
+    const isConfirmed = await confirmDelete({
+      title: 'Reject Vendor Application?',
+      text: `Are you sure you want to reject vendor application for "${userName}"? Account will be demoted to standard user.`,
+      confirmButtonText: 'Yes, Reject',
+    });
+    if (!isConfirmed) return;
+
     try {
       const res = await rejectOwner(userId).unwrap();
       toast.success(res?.message || `Vendor request for ${userName} rejected.`);
