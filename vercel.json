@@ -1,38 +1,18 @@
 {
-  "version": 2,
-  "builds": [
+  "buildCommand": "cd apps/client && npm run build",
+  "outputDirectory": "apps/client/dist",
+  "rewrites": [
     {
-      "src": "apps/server/api/index.js",
-      "use": "@vercel/node"
+      "source": "/api/:path*",
+      "destination": "/apps/server/api/index.js"
     },
     {
-      "src": "apps/client/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "apps/server/api/index.js"
+      "source": "/health",
+      "destination": "/apps/server/api/index.js"
     },
     {
-      "src": "/health",
-      "dest": "apps/server/api/index.js"
-    },
-    {
-      "src": "/assets/(.*)",
-      "dest": "apps/client/assets/$1"
-    },
-    {
-      "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|ico|svg|json|woff|woff2|ttf|eot))",
-      "dest": "apps/client/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "apps/client/index.html"
+      "source": "/:path((?!api|health).*)",
+      "destination": "/index.html"
     }
   ]
 }
