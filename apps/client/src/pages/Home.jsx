@@ -1,13 +1,24 @@
 import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Building2, Sparkles } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { useGetHotelsQuery } from '../features/hotels/hotelApiSlice';
 import HotelCard from '../components/hotel/HotelCard';
 import Loader from '../components/common/Loader';
 import Pagination from '../components/common/Pagination';
 import HeroSearch from '../components/home/HeroSearch';
 import PopularDestinations from '../components/home/PopularDestinations';
+import SpecialOffers from '../components/home/SpecialOffers';
+import SignatureExperiences from '../components/home/SignatureExperiences';
 import WhyChooseUs from '../components/home/WhyChooseUs';
+import GuestReviews from '../components/home/GuestReviews';
 import HomeFAQ from '../components/home/HomeFAQ';
 import NewsletterBanner from '../components/home/NewsletterBanner';
+
+const sectionVariants = {
+  hidden: { opacity: 0, y: 28 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
+};
 
 export default function Home() {
   const [search, setSearch] = useState('');
@@ -28,33 +39,57 @@ export default function Home() {
     }, 100);
   };
 
+  const handleClaimOffer = (code) => {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(code);
+    }
+    toast.success(`Promo code "${code}" copied to clipboard! Use it at checkout.`, {
+      duration: 4000,
+      icon: '🎁',
+      style: {
+        borderRadius: '16px',
+        background: 'var(--bg-card)',
+        color: 'var(--text-primary)',
+        border: '1px solid var(--border-color)',
+      },
+    });
+  };
+
   return (
-    <div className="space-y-16 pb-12 font-sans">
-      {/* 1. Hero Search Section */}
-      <HeroSearch onSearch={handleSearch} />
+    <div className="space-y-20 pb-16 font-sans overflow-x-hidden">
+      {/* 1. Hero Search Banner */}
+      <motion.div initial="hidden" animate="visible" variants={sectionVariants}>
+        <HeroSearch onSearch={handleSearch} />
+      </motion.div>
 
-      {/* 2. Popular City Destinations */}
-      <PopularDestinations onCitySelect={handleSearch} />
-
-      {/* 3. Real Hotels & Resorts from Database */}
-      <section id="all-hotels" className="space-y-8 scroll-mt-20">
+      {/* 2. Featured Real Hotels Grid (Directly below Banner) */}
+      <motion.section
+        id="all-hotels"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: '-50px' }}
+        variants={sectionVariants}
+        className="space-y-8 scroll-mt-20"
+      >
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h2 className="text-2xl md:text-3xl font-extrabold text-[var(--text-primary)] tracking-tight">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-[11px] font-extrabold uppercase tracking-widest mb-2">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>VERIFIED REAL-TIME STAYS</span>
+            </div>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-tight" style={{ color: 'var(--text-primary)' }}>
               {search ? (
                 <>
                   Hotels in{' '}
-                  <span className="bg-gradient-to-r from-emerald-600 to-amber-500 bg-clip-text text-transparent">
-                    {search}
-                  </span>
+                  <span style={{ color: 'var(--color-accent)' }}>{search}</span>
                 </>
               ) : (
-                'All Featured Hotels & Resorts'
+                'All Featured Luxury Hotels & Resorts'
               )}
             </h2>
             {data && !isLoading && (
-              <p className="text-[var(--text-secondary)] text-sm mt-1">
-                {data.total ?? data.hotels?.length ?? 0} properties registered
+              <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
+                Showing live registered properties · {data.total ?? data.hotels?.length ?? 0} available for instant booking
               </p>
             )}
           </div>
@@ -62,26 +97,36 @@ export default function Home() {
           {search && (
             <button
               onClick={() => { setSearch(''); setPage(1); }}
-              className="text-xs text-[var(--color-primary)] hover:underline border border-[var(--border-color)] bg-[var(--bg-card)] px-4 py-2 rounded-xl transition cursor-pointer font-semibold shadow-sm"
+              className="text-xs font-bold px-4 py-2.5 rounded-xl transition cursor-pointer shadow-sm hover:scale-105"
+              style={{
+                color: 'var(--color-primary)',
+                border: '1px solid var(--border-color)',
+                background: 'var(--bg-card)',
+              }}
             >
-              ✕ Clear filter: &ldquo;{search}&rdquo;
+              ✕ Clear Filter: &ldquo;{search}&rdquo;
             </button>
           )}
         </div>
 
-        {/* Loading / Error / Real Hotel Grid */}
         {isLoading ? (
           <Loader />
         ) : error ? (
-          <div className="text-center p-8 bg-red-950/20 border border-red-900/30 rounded-2xl text-red-400 text-sm max-w-md mx-auto">
+          <div
+            className="text-center p-8 rounded-2xl text-red-400 text-sm max-w-md mx-auto"
+            style={{ background: 'rgba(220,38,38,0.08)', border: '1px solid rgba(220,38,38,0.2)' }}
+          >
             Failed to load hotels. Please check your backend connection.
           </div>
         ) : !data?.hotels || data.hotels.length === 0 ? (
-          <div className="text-center py-16 space-y-4 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-color)]">
-            <p className="text-5xl">🏨</p>
-            <p className="text-[var(--text-muted)] text-sm">
+          <div
+            className="text-center py-16 space-y-4 rounded-3xl"
+            style={{ background: 'var(--bg-card)', border: '1px solid var(--border-color)' }}
+          >
+            <Building2 className="w-12 h-12 mx-auto opacity-30" style={{ color: 'var(--text-muted)' }} />
+            <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
               {search
-                ? `No hotels found for "${search}". Try a different city.`
+                ? `No hotels found for "${search}". Try searching another destination.`
                 : 'No registered hotels available at the moment.'}
             </p>
           </div>
@@ -92,25 +137,45 @@ export default function Home() {
                 <HotelCard key={hotel._id || hotel.id} hotel={hotel} />
               ))}
             </div>
-
-            {/* Pagination */}
-            <Pagination
-              page={page}
-              totalPages={data.totalPages}
-              onPageChange={setPage}
-            />
+            <Pagination page={page} totalPages={data.totalPages} onPageChange={setPage} />
           </div>
         )}
-      </section>
+      </motion.section>
 
-      {/* 4. Why Choose Us Guarantee Section */}
-      <WhyChooseUs />
+      {/* 3. Popular International Destinations */}
+      <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-50px' }} variants={sectionVariants}>
+        <PopularDestinations onCitySelect={handleSearch} />
+      </motion.div>
 
-      {/* 5. Frequently Asked Questions */}
-      <HomeFAQ />
+      {/* 4. Special Offers & Limited Promotions */}
+      <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-50px' }} variants={sectionVariants}>
+        <SpecialOffers onClaimOffer={handleClaimOffer} />
+      </motion.div>
 
-      {/* 6. VIP Newsletter Banner */}
-      <NewsletterBanner />
+      {/* 5. Signature Luxury Experiences */}
+      <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-50px' }} variants={sectionVariants}>
+        <SignatureExperiences />
+      </motion.div>
+
+      {/* 6. Why GetNest */}
+      <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-50px' }} variants={sectionVariants}>
+        <WhyChooseUs />
+      </motion.div>
+
+      {/* 7. Verified Guest Feedback */}
+      <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-50px' }} variants={sectionVariants}>
+        <GuestReviews />
+      </motion.div>
+
+      {/* 8. Frequently Asked Questions */}
+      <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-50px' }} variants={sectionVariants}>
+        <HomeFAQ />
+      </motion.div>
+
+      {/* 9. VIP Newsletter Subscription */}
+      <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-50px' }} variants={sectionVariants}>
+        <NewsletterBanner />
+      </motion.div>
     </div>
   );
 }
