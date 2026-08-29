@@ -19,7 +19,12 @@ const app = express();
 // ── CORS must come FIRST before any route ──────────────────────
 app.use(
   cors({
-    origin: env.CLIENT_URL || 'http://localhost:5173',
+    origin: (origin, callback) => {
+      if (!origin || origin.includes('localhost') || origin.includes('vercel.app') || origin === env.CLIENT_URL) {
+        return callback(null, true);
+      }
+      return callback(null, true);
+    },
     credentials: true,
   })
 );
