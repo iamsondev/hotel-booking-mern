@@ -1,4 +1,4 @@
-import { Tag, Sparkles, Clock, ArrowRight } from 'lucide-react';
+import { Tag, Gift, Clock, ArrowRight } from 'lucide-react';
 
 const OFFERS = [
   {
@@ -40,7 +40,7 @@ export default function SpecialOffers({ onClaimOffer }) {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
         <div>
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 text-xs font-bold uppercase tracking-wider mb-2">
-            <Sparkles className="w-3.5 h-3.5" />
+            <Gift className="w-3.5 h-3.5" />
             <span>EXCLUSIVE PROMOTIONS</span>
           </div>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[var(--text-primary)] tracking-tight">

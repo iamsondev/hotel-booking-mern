@@ -45,7 +45,7 @@ export default function SignatureExperiences() {
       {/* Section Title */}
       <div className="text-center max-w-2xl mx-auto space-y-3">
         <p className="text-xs font-bold uppercase tracking-widest text-[var(--color-accent)]">
-          ✦ ELEVATED HOSPITALITY
+          ELEVATED HOSPITALITY
         </p>
         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[var(--text-primary)] tracking-tight">
           Signature Luxury Experiences

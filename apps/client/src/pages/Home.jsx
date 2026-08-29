@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Building2, Sparkles } from 'lucide-react';
+import { Building2, ShieldCheck } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useGetHotelsQuery } from '../features/hotels/hotelApiSlice';
 import HotelCard from '../components/hotel/HotelCard';
@@ -74,7 +74,7 @@ export default function Home() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-[11px] font-extrabold uppercase tracking-widest mb-2">
-              <Sparkles className="w-3.5 h-3.5" />
+              <ShieldCheck className="w-3.5 h-3.5" />
               <span>VERIFIED REAL-TIME STAYS</span>
             </div>
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-tight" style={{ color: 'var(--text-primary)' }}>
