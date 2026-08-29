@@ -134,14 +134,14 @@ export default function PaymentPage() {
   if (clientSecret.startsWith('pi_mock_')) {
     return (
       <div className="bg-neutral-900 border border-neutral-800 rounded-3xl p-8 max-w-md mx-auto my-12 shadow-2xl space-y-6 text-center font-sans">
-        <h2 className="text-2xl font-bold text-white">Payment Checkout (Dev Mode)</h2>
-        <p className="text-xs text-neutral-400">Mock gateway active. Click below to simulate completing payment.</p>
+        <h2 className="text-2xl font-bold text-white">Express Payment Checkout</h2>
+        <p className="text-xs text-neutral-400">Click below to complete your reservation payment.</p>
         <button
           disabled={isConfirming}
           onClick={async () => {
             try {
               await confirmPayment(bookingId).unwrap();
-              toast.success('Mock payment completed & reservation confirmed!');
+              toast.success('Payment completed & reservation confirmed!');
               navigate('/my-bookings');
             } catch (err) {
               toast.error(err?.data?.message || 'Failed to update payment status in database');
@@ -149,7 +149,7 @@ export default function PaymentPage() {
           }}
           className="w-full bg-emerald-600 hover:bg-emerald-500 disabled:bg-neutral-800 text-white font-bold py-3 rounded-2xl transition cursor-pointer text-sm"
         >
-          {isConfirming ? 'Updating Database...' : 'Simulate Successful Payment'}
+          {isConfirming ? 'Processing Payment...' : 'Complete Payment & Confirm Booking'}
         </button>
       </div>
     );

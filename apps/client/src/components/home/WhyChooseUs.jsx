@@ -21,7 +21,7 @@ const features = [
   {
     icon: ShieldCheck,
     title: 'Secure Payments',
-    description: 'Every transaction is end-to-end encrypted with Stripe. Your payment is always safe and protected.',
+    description: 'Every transaction is end-to-end encrypted. Your payment details are always safe and protected.',
     iconColor: 'var(--status-success)',
     iconBg: 'color-mix(in srgb, var(--status-success) 10%, transparent)',
     iconBorder: 'color-mix(in srgb, var(--status-success) 20%, transparent)',
