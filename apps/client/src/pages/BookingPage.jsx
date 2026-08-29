@@ -19,7 +19,7 @@ export default function BookingPage() {
   const { data: roomResponse, isLoading: isRoomLoading, error: roomError } = useGetRoomByIdQuery(roomId);
   const [createBooking, { isLoading: isCreating }] = useCreateBookingMutation();
 
-  const room = roomResponse?.room || roomResponse;
+  const room = roomResponse?.data || roomResponse?.room || (roomResponse?._id ? roomResponse : null);
 
   const initialCheckIn = searchParams.get('checkIn') || location.state?.checkInDate || '';
   const initialCheckOut = searchParams.get('checkOut') || location.state?.checkOutDate || '';
@@ -119,7 +119,7 @@ export default function BookingPage() {
             Complete Reservation Details
           </h1>
           <p className="text-[var(--text-secondary)] text-sm">
-            Review your selection and check real-time cost breakdown before proceeding to payment.
+            Review your selection and confirm your stay details below.
           </p>
         </div>
 
@@ -270,58 +270,6 @@ export default function BookingPage() {
                 </div>
               </div>
 
-              {/* ── REAL-TIME LIVE COST BREAKDOWN BANNER ── */}
-              {nights > 0 ? (
-                <div className="bg-gradient-to-r from-emerald-500/10 via-cyan-500/10 to-indigo-500/10 border border-emerald-500/30 rounded-2xl p-5 space-y-3 shadow-inner">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-black uppercase tracking-wider text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
-                      <Sparkles className="w-4 h-4" /> Live Cost Calculation
-                    </span>
-                    <span className="text-[11px] font-extrabold bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 px-3 py-0.5 rounded-full border border-emerald-500/30">
-                      {nights} {nights === 1 ? 'Night' : 'Nights'} • {roomsCount} {roomsCount === 1 ? 'Room' : 'Rooms'}
-                    </span>
-                  </div>
-
-                  <div className="space-y-2 text-xs text-[var(--text-secondary)] pt-1 border-t border-emerald-500/20">
-                    <div className="flex justify-between items-center">
-                      <span>Rate per Night</span>
-                      <span className="font-bold text-[var(--text-primary)]">${pricePerNight} / night</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span>Stay Duration ({checkInDate} → {checkOutDate})</span>
-                      <span className="font-bold text-[var(--text-primary)]">{nights} {nights === 1 ? 'night' : 'nights'}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span>Selected Room Count</span>
-                      <span className="font-bold text-[var(--text-primary)]">{roomsCount} {roomsCount === 1 ? 'room' : 'rooms'}</span>
-                    </div>
-                    <div className="flex justify-between items-center text-[11px] text-[var(--text-muted)] italic">
-                      <span>Calculation Formula</span>
-                      <span>${pricePerNight} × {nights} nights × {roomsCount} rooms</span>
-                    </div>
-                  </div>
-
-                  <div className="pt-3 border-t border-emerald-500/30 flex items-center justify-between">
-                    <div>
-                      <span className="text-xs font-extrabold uppercase tracking-wider text-[var(--text-primary)] block">
-                        Total Amount Payable
-                      </span>
-                      <span className="text-[10px] text-[var(--text-muted)]">Includes all rooms for entire stay</span>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-2xl font-black text-emerald-600 dark:text-emerald-400 tracking-tight">
-                        ${totalPrice}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-4 text-xs font-semibold text-amber-600 dark:text-amber-400 flex items-center gap-2.5">
-                  <Info className="w-5 h-5 flex-shrink-0" />
-                  <span>Select both Check-In and Check-Out dates above to calculate your total reservation cost.</span>
-                </div>
-              )}
-
               {/* Submit */}
               <button
                 type="submit"
@@ -332,11 +280,7 @@ export default function BookingPage() {
                 onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--color-primary)')}
               >
                 <CreditCard className="w-5 h-5" />
-                {isCreating
-                  ? 'Processing Booking...'
-                  : nights > 0
-                  ? `Proceed to Payment ($${totalPrice})`
-                  : 'Select Stay Dates to Proceed'}
+                {isCreating ? 'Processing Booking...' : 'Proceed to Payment'}
               </button>
             </form>
           </div>

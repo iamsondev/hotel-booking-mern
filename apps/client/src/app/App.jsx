@@ -1,5 +1,6 @@
 import Navbar from '../components/common/Navbar';
 import Footer from '../components/common/Footer';
+import ScrollToTop from '../components/common/ScrollToTop';
 import AppRoutes from '../routes/AppRoutes';
 
 export default function App() {
@@ -13,6 +14,8 @@ export default function App() {
         <AppRoutes />
       </main>
       <Footer />
+      <ScrollToTop />
     </div>
   );
 }
+

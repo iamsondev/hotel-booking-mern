@@ -1,13 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useLogoutMutation } from '../../features/auth/authApiSlice';
 import Logo from './Logo';
 import ThemeToggle from './ThemeToggle';
 import {
-  Globe, ChevronDown, Ticket,
+  Globe, ChevronDown, Ticket, Check,
   LayoutDashboard, Building2, LogOut,
-  Menu, X, MapPin,
+  Menu, X,
 } from 'lucide-react';
 
 export default function Navbar() {
@@ -101,9 +102,15 @@ export default function Navbar() {
                 <ChevronDown className="w-3 h-3 opacity-50" />
               </button>
 
+              <AnimatePresence>
               {langOpen && (
-                <div className="absolute right-0 mt-2 w-44 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-2xl shadow-xl py-2 z-50 text-xs">
-                  {/* Currencies */}
+                <motion.div
+                  initial={{ opacity: 0, y: -8, scale: 0.97 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -8, scale: 0.97 }}
+                  transition={{ duration: 0.18 }}
+                  className="absolute right-0 mt-2 w-44 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-2xl shadow-xl py-2 z-50 text-xs"
+                >
                   <p className="px-3 pt-1 pb-0.5 text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)]">Currency</p>
                   {['USD ($)','EUR (€)','BDT (৳)','GBP (£)'].map((c) => {
                     const code = c.split(' ')[0];
@@ -111,12 +118,11 @@ export default function Navbar() {
                       <button key={c} onClick={() => { setCurrency(code); setLangOpen(false); }}
                         className="w-full text-left px-3 py-1.5 flex items-center justify-between font-semibold text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)] transition cursor-pointer">
                         {c}
-                        {currency === code && <span className="text-[var(--color-primary)] font-black">✓</span>}
+                        {currency === code && <Check className="w-3.5 h-3.5" style={{ color: 'var(--color-primary)' }} />}
                       </button>
                     );
                   })}
                   <div className="my-1 border-t border-[var(--border-color)]" />
-                  {/* Languages */}
                   <p className="px-3 pt-1 pb-0.5 text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)]">Language</p>
                   {['EN (English)','BN (বাংলা)','ES (Español)'].map((l) => {
                     const code = l.split(' ')[0];
@@ -124,12 +130,13 @@ export default function Navbar() {
                       <button key={l} onClick={() => { setLanguage(code); setLangOpen(false); }}
                         className="w-full text-left px-3 py-1.5 flex items-center justify-between font-semibold text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)] transition cursor-pointer">
                         {l}
-                        {language === code && <span className="text-[var(--color-primary)] font-black">✓</span>}
+                        {language === code && <Check className="w-3.5 h-3.5" style={{ color: 'var(--color-primary)' }} />}
                       </button>
                     );
                   })}
-                </div>
+                </motion.div>
               )}
+              </AnimatePresence>
             </div>
 
             {/* Theme toggle */}
@@ -225,8 +232,15 @@ export default function Navbar() {
       </div>
 
       {/* Mobile drawer */}
+      <AnimatePresence>
       {mobileOpen && (
-        <div className="lg:hidden border-t border-[var(--border-color)] bg-[var(--bg-card)] px-4 pb-6 pt-4 space-y-2 shadow-xl">
+        <motion.div
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: 'auto', opacity: 1 }}
+          exit={{ height: 0, opacity: 0 }}
+          transition={{ duration: 0.25, ease: 'easeInOut' }}
+          className="lg:hidden overflow-hidden border-t border-[var(--border-color)] bg-[var(--bg-card)] px-4 pb-6 pt-4 space-y-2 shadow-xl"
+        >
           <Link to="/hotels" onClick={() => setMobileOpen(false)} className="block px-3 py-2 rounded-xl text-sm font-bold text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)]">Explore Stays</Link>
           <a href="/#destinations" onClick={() => setMobileOpen(false)} className="block px-3 py-2 rounded-xl text-sm font-bold text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)]">Destinations</a>
           <a href="/#why-choose-us" onClick={() => setMobileOpen(false)} className="block px-3 py-2 rounded-xl text-sm font-bold text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)]">Why Us</a>
@@ -245,8 +259,9 @@ export default function Navbar() {
               <Link to="/register" className="text-center py-2.5 rounded-xl text-sm font-bold text-white" style={{ background: 'var(--color-primary)' }}>Get Started</Link>
             </div>
           )}
-        </div>
+        </motion.div>
       )}
+      </AnimatePresence>
     </header>
   );
 }
