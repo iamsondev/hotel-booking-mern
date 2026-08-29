@@ -1,9 +1,10 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Users, BedDouble, Wifi, Sparkles, ArrowRight, CheckCircle2, ShieldCheck } from 'lucide-react';
 
 export default function RoomCard({ room, hotelId }) {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   if (!room) return null;
 
@@ -98,7 +99,14 @@ export default function RoomCard({ room, hotelId }) {
       {/* Action Footer */}
       <div className="p-6 pt-0">
         <button
-          onClick={() => navigate(`/booking/${room._id || room.id}`)}
+          onClick={() => {
+            const checkIn = searchParams.get('checkIn');
+            const checkOut = searchParams.get('checkOut');
+            const bookingUrl = checkIn && checkOut
+              ? `/booking/${room._id || room.id}?checkIn=${checkIn}&checkOut=${checkOut}`
+              : `/booking/${room._id || room.id}`;
+            navigate(bookingUrl);
+          }}
           className="w-full text-white font-bold py-3 px-5 rounded-2xl shadow-lg transition-all duration-300 flex items-center justify-center gap-2 group-hover:gap-3 cursor-pointer"
           style={{ background: 'var(--color-primary)' }}
           onMouseEnter={e => e.currentTarget.style.background = 'var(--color-primary-hover)'}
