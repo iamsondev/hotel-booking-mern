@@ -191,10 +191,20 @@ export const getPendingHotels = asyncHandler(async (req, res) => {
 
   const data = await Promise.all(
     hotels.map(async (hotel) => {
-      const roomCount = await Room.countDocuments({ hotel: hotel._id, isDeleted: { $ne: true } });
+      const rooms = await Room.find({ hotel: hotel._id, isDeleted: { $ne: true } })
+        .select('roomType pricePerNight totalRooms capacity amenities images isActive');
+
+      const roomCount = rooms.length; // total room categories
+      const totalPhysicalRooms = rooms.reduce((sum, r) => {
+        const count = Number(r.totalRooms);
+        return sum + (count > 0 ? count : 1);
+      }, 0);
+
       return {
         ...hotel.toObject(),
         roomCount,
+        totalPhysicalRooms,
+        roomsDetails: rooms,
       };
     })
   );
