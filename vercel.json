@@ -1,23 +1,17 @@
 {
   "buildCommand": "cd apps/client && npm run build",
   "outputDirectory": "apps/client/dist",
-  "functions": {
-    "apps/server/api/index.js": {
-      "memory": 1024,
-      "maxDuration": 10
-    }
-  },
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "/apps/server/api/index.js"
+      "source": "/api/:path*",
+      "destination": "/api"
     },
     {
       "source": "/health",
-      "destination": "/apps/server/api/index.js"
+      "destination": "/api"
     },
     {
-      "source": "/((?!api|health).*)",
+      "source": "/:path((?!api|health).*)",
       "destination": "/index.html"
     }
   ]
