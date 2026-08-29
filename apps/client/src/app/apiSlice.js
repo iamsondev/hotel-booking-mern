@@ -1,8 +1,16 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { logout } from '../features/auth/authSlice';
 
+const getBaseUrl = () => {
+  const envUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL;
+  if (envUrl && !envUrl.includes('localhost')) {
+    return envUrl;
+  }
+  return import.meta.env.PROD ? '/api' : 'http://localhost:5000/api';
+};
+
 const baseQuery = fetchBaseQuery({
-  baseUrl: import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || '/api',
+  baseUrl: getBaseUrl(),
   credentials: 'include',
   prepareHeaders: (headers, { getState }) => {
     const token = getState().auth.token;
