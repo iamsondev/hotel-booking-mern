@@ -1,20 +1,25 @@
+import { useState } from 'react';
 import { useGetMyBookingsQuery, useCancelBookingMutation } from '../features/bookings/bookingApiSlice';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import Loader from '../components/common/Loader';
+import Pagination from '../components/common/Pagination';
 import { Ticket, Calendar, DollarSign, CreditCard, XCircle, Hotel, ArrowRight } from 'lucide-react';
 import { confirmDelete } from '../utils/confirmDialog';
 
 export default function MyBookings() {
   const navigate = useNavigate();
-  const { data: bookingsResponse, isLoading, error } = useGetMyBookingsQuery();
+  const [page, setPage] = useState(1);
+  const { data: bookingsResponse, isLoading, error } = useGetMyBookingsQuery({ page, limit: 5 });
   const [cancelBooking, { isLoading: isCancelling }] = useCancelBookingMutation();
 
   const bookings = Array.isArray(bookingsResponse)
     ? bookingsResponse
     : bookingsResponse?.data || bookingsResponse?.bookings || [];
 
-  const totalBookings = bookings.length;
+  const paginationInfo = bookingsResponse?.pagination || {};
+  const totalPages = paginationInfo.pages || 1;
+  const totalBookings = paginationInfo.total ?? bookings.length;
   const activeBookings = bookings.filter(
     (b) => b.status?.toLowerCase() === 'confirmed' || b.status?.toLowerCase() === 'pending'
   ).length;
@@ -240,6 +245,9 @@ export default function MyBookings() {
           })}
         </div>
       )}
+
+      {/* Pagination */}
+      <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
     </div>
   );
 }
