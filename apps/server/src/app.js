@@ -42,7 +42,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Health Check Route
-app.get('/health', (req, res) => {
+app.get(['/health', '/api/health'], (req, res) => {
   res.status(200).json({
     status: 'OK',
     message: 'Server is healthy and operational',
@@ -51,12 +51,12 @@ app.get('/health', (req, res) => {
 });
 
 // Mount Feature Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/hotels', hotelRoutes);
-app.use('/api/rooms', roomRoutes);
-app.use('/api/bookings', bookingRoutes);
-app.use('/api/payments', paymentRoutes);
+app.use(['/api/auth', '/auth'], authRoutes);
+app.use(['/api/users', '/users'], userRoutes);
+app.use(['/api/hotels', '/hotels'], hotelRoutes);
+app.use(['/api/rooms', '/rooms'], roomRoutes);
+app.use(['/api/bookings', '/bookings'], bookingRoutes);
+app.use(['/api/payments', '/payments'], paymentRoutes);
 
 // Error Handling Middlewares (Must be mounted last)
 app.use(notFound);
