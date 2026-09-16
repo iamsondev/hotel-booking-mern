@@ -8,7 +8,7 @@ import RoomCard from '../components/room/RoomCard';
 import Loader from '../components/common/Loader';
 import {
   Star, MapPin, Share2, Heart, ShieldCheck, Wifi, Coffee,
-  Sparkles, Check, ChevronRight, X, Maximize2, Award, Clock,
+  Check, ChevronRight, X, Maximize2, Award, Clock,
   ArrowRight, Utensils, Waves, Dumbbell, Car, CheckCircle2,
   Calendar, Info, AlertCircle, PhoneCall, Globe
 } from 'lucide-react';
@@ -97,7 +97,7 @@ export default function HotelDetails() {
     wifi: <Wifi className="w-4 h-4 text-indigo-400" />,
     pool: <Waves className="w-4 h-4 text-blue-400" />,
     dining: <Utensils className="w-4 h-4 text-amber-400" />,
-    spa: <Sparkles className="w-4 h-4 text-purple-400" />,
+    spa: <Award className="w-4 h-4 text-purple-400" />,
     gym: <Dumbbell className="w-4 h-4 text-emerald-400" />,
     parking: <Car className="w-4 h-4 text-emerald-400" />,
     breakfast: <Coffee className="w-4 h-4 text-amber-400" />,
@@ -140,31 +140,87 @@ export default function HotelDetails() {
           </div>
         </div>
 
-        {/* Title, Star Rating, Badges */}
-        <div className="space-y-3 gsap-fade-up">
-          <div className="flex flex-wrap items-center gap-3">
-            <span className="inline-flex items-center gap-1 bg-amber-400/10 border border-amber-400/30 text-amber-400 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
-              <Star className="w-3.5 h-3.5 fill-amber-400" />
-              <span>{hotel.starRating || 5}-Star Luxury Haven</span>
-            </span>
-            <span className="inline-flex items-center gap-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full text-xs font-bold">
-              <ShieldCheck className="w-3.5 h-3.5" /> Verified Stay Ease Partner
-            </span>
+        {/* Title, Star Rating, Badges & Top Reservation Card */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start gsap-fade-up">
+          <div className="lg:col-span-2 space-y-3">
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="inline-flex items-center gap-1 bg-amber-400/10 border border-amber-400/30 text-amber-400 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+                <Star className="w-3.5 h-3.5 fill-amber-400" />
+                <span>{hotel.starRating || 5}-Star Luxury Haven</span>
+              </span>
+              <span className="inline-flex items-center gap-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full text-xs font-bold">
+                <ShieldCheck className="w-3.5 h-3.5" /> Verified Stay Ease Partner
+              </span>
+            </div>
+
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-[var(--text-primary)] leading-tight">
+              {hotel.name}
+            </h1>
+
+            <p className="text-sm font-medium text-[var(--text-secondary)] flex items-center gap-2 flex-wrap">
+              <MapPin className="w-4 h-4 text-[var(--color-primary)] flex-shrink-0" />
+              <span>
+                {hotel.address?.line1 ? `${hotel.address.line1}, ` : ''}
+                {hotel.address?.city || 'Location'}, {hotel.address?.country || ''}
+              </span>
+              <span className="opacity-30">·</span>
+              <span className="text-[var(--color-accent)] font-semibold text-xs">Prime Location (9.8 Score)</span>
+            </p>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-[var(--text-primary)] leading-tight">
-            {hotel.name}
-          </h1>
+          {/* Top Reservation Card Above Photos */}
+          <div className="lg:col-span-1 bg-[var(--bg-card)] border border-[var(--border-color)] p-5 rounded-3xl shadow-xl space-y-4 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-28 h-28 bg-[var(--color-primary)]/10 rounded-full blur-2xl pointer-events-none" />
 
-          <p className="text-sm font-medium text-[var(--text-secondary)] flex items-center gap-2">
-            <MapPin className="w-4 h-4 text-[var(--color-primary)] flex-shrink-0" />
-            <span>
-              {hotel.address?.line1 ? `${hotel.address.line1}, ` : ''}
-              {hotel.address?.city || 'Location'}, {hotel.address?.country || ''}
-            </span>
-            <span className="opacity-30">·</span>
-            <span className="text-[var(--color-accent)] font-semibold text-xs">Prime Location (9.8 Score)</span>
-          </p>
+            {/* Price & Rating Header */}
+            <div className="flex items-baseline justify-between border-b border-[var(--border-color)] pb-3">
+              <div>
+                <p className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider">Starts from</p>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-3xl font-black text-[var(--color-primary)]">${startingPrice}</span>
+                  <span className="text-xs text-[var(--text-muted)] font-bold">/ night</span>
+                </div>
+              </div>
+
+              <div className="text-right">
+                <div className="inline-flex items-center gap-1 bg-amber-400/10 px-2.5 py-1 rounded-xl text-xs font-black text-amber-400 border border-amber-400/20">
+                  <Star className="w-3.5 h-3.5 fill-amber-400" />
+                  <span>4.9 / 5</span>
+                </div>
+                <p className="text-[10px] text-[var(--text-muted)] font-semibold mt-1">128 Verified Reviews</p>
+              </div>
+            </div>
+
+            {/* Availability Status */}
+            <div className="flex items-center gap-2 text-xs font-bold text-emerald-400 bg-emerald-500/10 p-2.5 rounded-2xl border border-emerald-500/20">
+              <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+              <span>Rooms available for your selected stay dates!</span>
+            </div>
+
+            {/* CTA Button */}
+            <button
+              onClick={scrollToRooms}
+              className="w-full py-3 px-5 rounded-2xl text-white font-bold text-xs shadow-lg transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
+              style={{ background: 'var(--color-primary)' }}
+              onMouseEnter={e => e.currentTarget.style.background = 'var(--color-primary-hover)'}
+              onMouseLeave={e => e.currentTarget.style.background = 'var(--color-primary)'}
+            >
+              <span>View Available Rooms</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+
+            {/* Guarantee Points */}
+            <div className="space-y-1.5 text-[11px] text-[var(--text-muted)] font-medium">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="w-3.5 h-3.5 text-[var(--color-accent)] flex-shrink-0" />
+                <span>Instant Confirmation & Best Price Guarantee</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Clock className="w-3.5 h-3.5 text-[var(--color-primary)] flex-shrink-0" />
+                <span>Free cancellation up to 24h before check-in</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -235,40 +291,36 @@ export default function HotelDetails() {
         )}
       </div>
 
-      {/* Main Content & Sticky Booking Summary Sidebar */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 items-start">
-        
-        {/* Left Column — Detailed Info & Tabs */}
-        <div className="lg:col-span-2 space-y-8">
-          
-          {/* Navigation Tabs */}
-          <div className="flex border-b border-[var(--border-color)] space-x-6 overflow-x-auto scrollbar-none">
-            {[
-              { id: 'overview', label: 'Overview & Story' },
-              { id: 'amenities', label: 'Luxury Amenities' },
-              { id: 'surroundings', label: 'Location & Highlights' },
-              { id: 'policies', label: 'Stay Policies' },
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`py-3 text-sm font-extrabold transition-all relative cursor-pointer whitespace-nowrap ${
-                  activeTab === tab.id
-                    ? 'text-[var(--color-primary)]'
-                    : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
-                }`}
-              >
-                {tab.label}
-                {activeTab === tab.id && (
-                  <motion.div
-                    layoutId="activeTabIndicator"
-                    className="absolute bottom-0 left-0 right-0 h-0.5 rounded-full"
-                    style={{ background: 'var(--color-primary)' }}
-                  />
-                )}
-              </button>
-            ))}
-          </div>
+      {/* Main Content Pane */}
+      <div className="space-y-8">
+        {/* Navigation Tabs */}
+        <div className="flex border-b border-[var(--border-color)] space-x-6 overflow-x-auto scrollbar-none">
+          {[
+            { id: 'overview', label: 'Overview & Story' },
+            { id: 'amenities', label: 'Luxury Amenities' },
+            { id: 'surroundings', label: 'Location & Highlights' },
+            { id: 'policies', label: 'Stay Policies' },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`py-3 text-sm font-extrabold transition-all relative cursor-pointer whitespace-nowrap ${
+                activeTab === tab.id
+                  ? 'text-[var(--color-primary)]'
+                  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+              }`}
+            >
+              {tab.label}
+              {activeTab === tab.id && (
+                <motion.div
+                  layoutId="activeTabIndicator"
+                  className="absolute bottom-0 left-0 right-0 h-0.5 rounded-full"
+                  style={{ background: 'var(--color-primary)' }}
+                />
+              )}
+            </button>
+          ))}
+        </div>
 
           {/* Tab Content Panes */}
           <AnimatePresence mode="wait">
@@ -350,7 +402,7 @@ export default function HotelDetails() {
                         className="flex items-center gap-3 p-4 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-2xl shadow-sm hover:border-[var(--color-primary)]/40 transition"
                       >
                         <div className="p-2 rounded-xl bg-[var(--bg-card-hover)] border border-[var(--border-color)]">
-                          {amenityIcons[item.toLowerCase()] || <Sparkles className="w-4 h-4 text-[var(--color-accent)]" />}
+                          {amenityIcons[item.toLowerCase()] || <Award className="w-4 h-4 text-[var(--color-accent)]" />}
                         </div>
                         <span className="text-xs font-bold text-[var(--text-primary)] capitalize">{item}</span>
                       </div>
@@ -414,65 +466,6 @@ export default function HotelDetails() {
           </AnimatePresence>
         </div>
 
-        {/* Right Column — Sticky Luxury Reservation Summary Card */}
-        <div className="sticky top-24 space-y-6">
-          <div className="p-6 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-3xl shadow-2xl space-y-6 relative overflow-hidden">
-            
-            {/* Background Glow */}
-            <div className="absolute top-0 right-0 w-36 h-36 bg-[var(--color-primary)]/10 rounded-full blur-3xl pointer-events-none" />
-
-            {/* Price & Rating Header */}
-            <div className="flex items-baseline justify-between border-b border-[var(--border-color)] pb-4">
-              <div>
-                <p className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider">Starts from</p>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-3xl font-black text-[var(--color-primary)]">${startingPrice}</span>
-                  <span className="text-xs text-[var(--text-muted)] font-bold">/ night</span>
-                </div>
-              </div>
-
-              <div className="text-right">
-                <div className="inline-flex items-center gap-1 bg-amber-400/10 px-2.5 py-1 rounded-xl text-xs font-black text-amber-400 border border-amber-400/20">
-                  <Star className="w-3.5 h-3.5 fill-amber-400" />
-                  <span>4.9 / 5</span>
-                </div>
-                <p className="text-[10px] text-[var(--text-muted)] font-semibold mt-1">128 Verified Reviews</p>
-              </div>
-            </div>
-
-            {/* Availability Status */}
-            <div className="flex items-center gap-2 text-xs font-bold text-emerald-400 bg-emerald-500/10 p-3 rounded-2xl border border-emerald-500/20">
-              <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
-              <span>Rooms available for your selected stay dates!</span>
-            </div>
-
-            {/* CTA Button */}
-            <button
-              onClick={scrollToRooms}
-              className="w-full py-3.5 px-6 rounded-2xl text-white font-bold text-sm shadow-xl transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
-              style={{ background: 'var(--color-primary)' }}
-              onMouseEnter={e => e.currentTarget.style.background = 'var(--color-primary-hover)'}
-              onMouseLeave={e => e.currentTarget.style.background = 'var(--color-primary)'}
-            >
-              <span>View Available Rooms</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-
-            {/* Guarantee points */}
-            <div className="space-y-2 pt-2 text-[11px] text-[var(--text-muted)] font-medium">
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="w-3.5 h-3.5 text-[var(--color-accent)]" />
-                <span>Instant Confirmation & Best Price Guarantee</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Clock className="w-3.5 h-3.5 text-[var(--color-primary)]" />
-                <span>Free cancellation up to 24h before check-in</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <hr className="border-[var(--border-color)]" />
 
       {/* Available Rooms Section */}
@@ -480,7 +473,7 @@ export default function HotelDetails() {
         <div className="flex items-end justify-between">
           <div>
             <span className="inline-flex items-center gap-1.5 text-xs font-extrabold text-[var(--color-accent)] uppercase tracking-wider mb-1">
-              <Sparkles className="w-3.5 h-3.5" /> Accommodations
+              <Award className="w-3.5 h-3.5" /> Accommodations
             </span>
             <h2 className="text-3xl font-black text-[var(--text-primary)] tracking-tight">Available Suites & Rooms</h2>
             <p className="text-xs text-[var(--text-muted)] mt-1">Select your preferred suite to proceed with seamless booking.</p>
