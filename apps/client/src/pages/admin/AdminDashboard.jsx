@@ -179,14 +179,14 @@ export default function AdminDashboard() {
             </p>
 
             {pendingHotels.length > 0 ? (
-              <div className="space-y-3 pt-2">
+              <div className="space-y-3 pt-2 min-w-0">
                 {pendingHotels.slice(0, 2).map((h) => (
-                  <div key={h._id || h.id} className="bg-[var(--bg-input)] border border-[var(--border-color)] rounded-2xl p-4 flex items-center justify-between">
-                    <div>
-                      <h4 className="text-xs sm:text-sm font-bold text-[var(--text-primary)]">{h.name}</h4>
-                      <p className="text-[11px] text-[var(--text-muted)]">{h.address?.city || 'Location unavailable'}</p>
+                  <div key={h._id || h.id} className="bg-[var(--bg-input)] border border-[var(--border-color)] rounded-2xl p-4 flex items-center justify-between gap-3 min-w-0">
+                    <div className="min-w-0 flex-1">
+                      <h4 className="text-xs sm:text-sm font-bold text-[var(--text-primary)] truncate">{h.name}</h4>
+                      <p className="text-[11px] text-[var(--text-muted)] truncate">{h.address?.city || 'Location unavailable'}</p>
                     </div>
-                    <span className="text-xs bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 px-2.5 py-1 rounded-full font-semibold">
+                    <span className="text-xs bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 px-2.5 py-1 rounded-full font-semibold flex-shrink-0">
                       Pending
                     </span>
                   </div>
