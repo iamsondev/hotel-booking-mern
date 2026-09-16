@@ -160,3 +160,25 @@ html {
   from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+
+/* ── Hide Floating Stripe SDK Test Mode Developer Inspector Widget ── */
+iframe[title*="Stripe Developer"],
+iframe[src*="stripe.com/m-outer"],
+[class*="StripeDeveloper"],
+[id*="stripe-developer"],
+div[data-stripe-devtools],
+[class*="stripe-badge"],
+[id*="stripe-badge"],
+[data-stripe-extension-root],
+div[id*="stripe-badge"],
+div[class*="stripe-badge"],
+.stripe-test-badge,
+#stripe-test-badge,
+div[class*="stripe"][class*="developer"],
+div:has(span:contains("Elements inspector")),
+div:has(div:contains("Stripe Developers")) {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
