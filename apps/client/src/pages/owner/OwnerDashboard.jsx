@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux';
 import { useGetMyHotelsQuery } from '../../features/hotels/hotelApiSlice';
 import { Link } from 'react-router-dom';
 import Loader from '../../components/common/Loader';
-import { Building2, PlusCircle, CheckCircle2, Clock, ArrowRight, Sparkles, AlertTriangle } from 'lucide-react';
+import { Building2, PlusCircle, CheckCircle2, Clock, ArrowRight, Award, AlertTriangle } from 'lucide-react';
 
 export default function OwnerDashboard() {
   const { user } = useSelector((state) => state.auth);
@@ -47,7 +47,7 @@ export default function OwnerDashboard() {
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2">
             <div className="inline-flex items-center space-x-2 bg-indigo-500/20 border border-indigo-500/30 px-3.5 py-1 rounded-full text-indigo-300 text-xs font-semibold uppercase tracking-wider">
-              <Sparkles className="w-4 h-4" />
+              <Building2 className="w-4 h-4" />
               <span>Owner Portal</span>
             </div>
             <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
