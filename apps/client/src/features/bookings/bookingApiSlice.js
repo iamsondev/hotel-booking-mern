@@ -11,7 +11,10 @@ export const bookingApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ['Booking'],
     }),
     getMyBookings: builder.query({
-      query: () => '/bookings/my-bookings',
+      query: (params) => {
+        const { page = 1, limit = 5 } = params || {};
+        return `/bookings/my-bookings?page=${page}&limit=${limit}`;
+      },
       providesTags: ['Booking'],
     }),
     getBookingById: builder.query({
