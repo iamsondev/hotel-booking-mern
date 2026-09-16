@@ -7,7 +7,7 @@ import Loader from '../components/common/Loader';
 import DatePickerField from '../components/common/DatePickerField';
 import {
   BedDouble, Users, CalendarDays, CreditCard,
-  CheckCircle2, Sparkles, Moon, DollarSign, ArrowRight, Info
+  CheckCircle2, ShieldCheck, Moon, DollarSign, ArrowRight, Info
 } from 'lucide-react';
 
 export default function BookingPage() {
@@ -112,7 +112,7 @@ export default function BookingPage() {
         {/* Page Header */}
         <div className="mb-8 text-center space-y-1">
           <div className="inline-flex items-center gap-2 bg-[var(--color-primary)]/10 border border-[var(--color-primary)]/20 px-4 py-1.5 rounded-full text-[var(--color-primary)] text-xs font-bold uppercase tracking-wider">
-            <Sparkles className="w-3.5 h-3.5" />
+            <ShieldCheck className="w-3.5 h-3.5" />
             <span>Secure Booking</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-[var(--text-primary)] tracking-tight">
