@@ -15,7 +15,7 @@ export default function CustomerLayout() {
   return (
     <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-primary)] flex flex-col md:flex-row font-sans transition-colors duration-300">
       {/* Sidebar */}
-      <aside className="w-full md:w-64 bg-[var(--bg-card)] border-r border-[var(--border-color)] p-6 flex flex-col justify-between flex-shrink-0 shadow-sm">
+      <aside className="w-full md:w-64 bg-[var(--bg-card)] border-r border-[var(--border-color)] p-6 flex flex-col justify-between flex-shrink-0 shadow-sm md:sticky md:top-0 md:h-screen md:max-h-screen overflow-y-auto">
         <div className="space-y-6">
 
 
