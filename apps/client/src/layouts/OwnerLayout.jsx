@@ -1,5 +1,5 @@
 import { Link, useLocation, Outlet } from 'react-router-dom';
-import { LayoutDashboard, Building2, PlusCircle, ArrowLeft, Sparkles } from 'lucide-react';
+import { LayoutDashboard, Building2, PlusCircle, ArrowLeft } from 'lucide-react';
 
 export default function OwnerLayout() {
   const location = useLocation();
@@ -25,14 +25,14 @@ export default function OwnerLayout() {
   return (
     <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-primary)] flex flex-col md:flex-row font-sans transition-colors duration-300">
       {/* Sidebar */}
-      <aside className="w-full md:w-64 bg-[var(--bg-card)] border-r border-[var(--border-color)] p-6 flex flex-col justify-between flex-shrink-0 shadow-sm">
+      <aside className="w-full md:w-64 bg-[var(--bg-card)] border-r border-[var(--border-color)] p-6 flex flex-col justify-between flex-shrink-0 shadow-sm md:sticky md:top-0 md:h-screen md:max-h-screen overflow-y-auto">
         <div className="space-y-6">
 
 
           {/* Header Badge */}
           <div className="flex items-center space-x-3 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/40 p-3 rounded-2xl">
             <div className="p-2 bg-amber-600/10 dark:bg-amber-400/20 border border-amber-600/20 dark:border-amber-400/30 rounded-xl text-amber-600 dark:text-amber-400">
-              <Sparkles className="w-5 h-5" />
+              <Building2 className="w-5 h-5" />
             </div>
             <div>
               <h2 className="text-sm font-extrabold tracking-tight text-theme-primary">Owner Portal</h2>
