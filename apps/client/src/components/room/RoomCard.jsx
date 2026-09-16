@@ -1,6 +1,6 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Users, BedDouble, Wifi, Sparkles, ArrowRight, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { Users, BedDouble, Wifi, Award, ArrowRight, CheckCircle2, ShieldCheck } from 'lucide-react';
 
 export default function RoomCard({ room, hotelId }) {
   const navigate = useNavigate();
@@ -33,7 +33,7 @@ export default function RoomCard({ room, hotelId }) {
           
           {/* Room Type Tag */}
           <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-md border border-white/10 px-3 py-1 rounded-xl text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5 text-[var(--color-accent)]" />
+            <Award className="w-3.5 h-3.5 text-[var(--color-accent)]" />
             <span>{room.roomType || 'Standard Suite'}</span>
           </div>
 
