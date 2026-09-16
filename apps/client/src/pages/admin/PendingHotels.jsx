@@ -16,7 +16,6 @@ import {
   User,
   Mail,
   Phone,
-  Sparkles,
   ShieldAlert,
   Calendar,
   Image as ImageIcon
@@ -74,7 +73,7 @@ export default function PendingHotels() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-[var(--border-color)]/60">
         <div>
           <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-amber-500/10 to-indigo-500/10 border border-amber-500/20 px-3.5 py-1 rounded-full text-amber-600 dark:text-amber-400 text-xs font-bold uppercase tracking-wider mb-2 shadow-sm">
-            <Sparkles className="w-3.5 h-3.5" />
+            <ShieldAlert className="w-3.5 h-3.5" />
             <span>Listing Moderation Queue</span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-black text-[var(--text-primary)] tracking-tight">
@@ -137,25 +136,25 @@ export default function PendingHotels() {
 
                 <div className="p-6 sm:p-8 space-y-6">
                   {/* Top Bar: Property Title, Stars & Owner Info */}
-                  <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-5 border-b border-[var(--border-color)]/60">
-                    <div className="space-y-1.5">
-                      <div className="flex items-center gap-3 flex-wrap">
-                        <h3 className="text-xl sm:text-2xl font-black text-[var(--text-primary)] tracking-tight">
+                  <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-5 border-b border-[var(--border-color)]/60 min-w-0">
+                    <div className="space-y-1.5 min-w-0 flex-1">
+                      <div className="flex items-center gap-3 flex-wrap min-w-0">
+                        <h3 className="text-xl sm:text-2xl font-black text-[var(--text-primary)] tracking-tight break-words min-w-0 max-w-full">
                           {hotel.name}
                         </h3>
-                        <span className="inline-flex items-center gap-1 bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 text-[10px] uppercase tracking-wider px-3 py-1 rounded-full font-extrabold shadow-sm">
+                        <span className="inline-flex items-center gap-1 bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 text-[10px] uppercase tracking-wider px-3 py-1 rounded-full font-extrabold shadow-sm flex-shrink-0">
                           <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping"></span>
                           Pending Review
                         </span>
                       </div>
 
-                      <div className="flex items-center gap-4 flex-wrap text-xs text-[var(--text-secondary)]">
-                        <span className="flex items-center text-[var(--color-primary)] font-semibold">
-                          <MapPin className="w-3.5 h-3.5 mr-1" />
-                          {hotel.address?.street ? `${hotel.address.street}, ` : ''}{hotel.address?.city || 'Location unspecified'}, {hotel.address?.country || ''}
+                      <div className="flex items-center gap-4 flex-wrap text-xs text-[var(--text-secondary)] min-w-0 max-w-full">
+                        <span className="flex items-center text-[var(--color-primary)] font-semibold truncate min-w-0 max-w-[280px] sm:max-w-[450px]" title={`${hotel.address?.street ? `${hotel.address.street}, ` : ''}${hotel.address?.city || 'Location unspecified'}, ${hotel.address?.country || ''}`}>
+                          <MapPin className="w-3.5 h-3.5 mr-1 flex-shrink-0" />
+                          <span className="truncate">{hotel.address?.street ? `${hotel.address.street}, ` : ''}{hotel.address?.city || 'Location unspecified'}, {hotel.address?.country || ''}</span>
                         </span>
 
-                        <div className="flex items-center gap-1 text-amber-400">
+                        <div className="flex items-center gap-1 text-amber-400 flex-shrink-0">
                           {Array.from({ length: starCount }).map((_, i) => (
                             <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
                           ))}
@@ -167,16 +166,16 @@ export default function PendingHotels() {
                     </div>
 
                     {/* Owner Badge */}
-                    <div className="bg-[var(--bg-input)] border border-[var(--border-color)] rounded-2xl px-4 py-2.5 flex items-center gap-3 self-start lg:self-auto shadow-sm">
-                      <div className="w-8 h-8 rounded-full bg-[var(--color-primary)]/10 text-[var(--color-primary)] border border-[var(--color-primary)]/20 flex items-center justify-center font-bold text-xs">
+                    <div className="bg-[var(--bg-input)] border border-[var(--border-color)] rounded-2xl px-4 py-2.5 flex items-center gap-3 self-start lg:self-auto shadow-sm max-w-full min-w-0">
+                      <div className="w-8 h-8 rounded-full bg-[var(--color-primary)]/10 text-[var(--color-primary)] border border-[var(--color-primary)]/20 flex items-center justify-center font-bold text-xs flex-shrink-0">
                         <User className="w-4 h-4" />
                       </div>
-                      <div className="text-xs">
+                      <div className="text-xs min-w-0">
                         <span className="text-[10px] text-[var(--text-muted)] uppercase tracking-wider block font-bold">Property Vendor</span>
-                        <span className="font-bold text-[var(--text-primary)] block">{ownerName}</span>
+                        <span className="font-bold text-[var(--text-primary)] block truncate">{ownerName}</span>
                         {ownerEmail && (
-                          <span className="text-[11px] text-[var(--text-muted)] block flex items-center gap-1">
-                            <Mail className="w-3 h-3 inline" /> {ownerEmail}
+                          <span className="text-[11px] text-[var(--text-muted)] block flex items-center gap-1 truncate max-w-[220px]">
+                            <Mail className="w-3 h-3 flex-shrink-0" /> <span className="truncate">{ownerEmail}</span>
                           </span>
                         )}
                       </div>
@@ -208,44 +207,44 @@ export default function PendingHotels() {
                     {/* Middle-Right: Summary Details & Room Breakdown */}
                     <div className="lg:col-span-8 space-y-4">
                       {/* Key Inventory KPI Pills */}
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                        <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-3 flex items-center gap-3">
-                          <div className="p-2 rounded-xl bg-emerald-500/20 text-emerald-600 dark:text-emerald-400">
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 min-w-0">
+                        <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-3 flex items-center gap-3 min-w-0">
+                          <div className="p-2 rounded-xl bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex-shrink-0">
                             <Layers className="w-5 h-5" />
                           </div>
-                          <div>
-                            <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 block">
+                          <div className="min-w-0 flex-1">
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 block truncate">
                               Room Types
                             </span>
-                            <span className="text-lg font-black text-[var(--text-primary)]">
+                            <span className="text-lg font-black text-[var(--text-primary)] truncate block">
                               {roomCount} {roomCount === 1 ? 'Category' : 'Categories'}
                             </span>
                           </div>
                         </div>
 
-                        <div className="bg-cyan-500/10 border border-cyan-500/20 rounded-2xl p-3 flex items-center gap-3">
-                          <div className="p-2 rounded-xl bg-cyan-500/20 text-cyan-600 dark:text-cyan-400">
+                        <div className="bg-cyan-500/10 border border-cyan-500/20 rounded-2xl p-3 flex items-center gap-3 min-w-0">
+                          <div className="p-2 rounded-xl bg-cyan-500/20 text-cyan-600 dark:text-cyan-400 flex-shrink-0">
                             <BedDouble className="w-5 h-5" />
                           </div>
-                          <div>
-                            <span className="text-[10px] font-bold uppercase tracking-wider text-cyan-600 dark:text-cyan-400 block">
+                          <div className="min-w-0 flex-1">
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-cyan-600 dark:text-cyan-400 block truncate">
                               Total Inventory
                             </span>
-                            <span className="text-lg font-black text-[var(--text-primary)]">
+                            <span className="text-lg font-black text-[var(--text-primary)] truncate block">
                               {totalPhysicalRooms} {totalPhysicalRooms === 1 ? 'Room' : 'Rooms'}
                             </span>
                           </div>
                         </div>
 
-                        <div className="bg-indigo-500/10 border border-indigo-500/20 rounded-2xl p-3 flex items-center gap-3 col-span-2 sm:col-span-1">
-                          <div className="p-2 rounded-xl bg-indigo-500/20 text-indigo-600 dark:text-indigo-400">
+                        <div className="bg-indigo-500/10 border border-indigo-500/20 rounded-2xl p-3 flex items-center gap-3 col-span-2 sm:col-span-1 min-w-0">
+                          <div className="p-2 rounded-xl bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 flex-shrink-0">
                             <Building2 className="w-5 h-5" />
                           </div>
-                          <div>
-                            <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 block">
+                          <div className="min-w-0 flex-1">
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 block truncate">
                               City Location
                             </span>
-                            <span className="text-sm font-bold text-[var(--text-primary)] truncate block">
+                            <span className="text-xs sm:text-sm font-bold text-[var(--text-primary)] truncate block" title={hotel.address?.city || 'Unspecified'}>
                               {hotel.address?.city || 'Unspecified'}
                             </span>
                           </div>
