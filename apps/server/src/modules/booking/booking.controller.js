@@ -61,17 +61,30 @@ export const createBooking = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc    Get logged-in user's bookings
+// @desc    Get logged-in user's bookings (with pagination)
 // @route   GET /api/bookings/my-bookings
 export const getMyBookings = asyncHandler(async (req, res) => {
+  const page = parseInt(req.query.page, 10) || 1;
+  const limit = parseInt(req.query.limit, 10) || 5;
+  const skip = (page - 1) * limit;
+
+  const total = await Booking.countDocuments({ user: req.user._id });
   const bookings = await Booking.find({ user: req.user._id })
     .populate('hotel', 'name address images starRating')
     .populate('room', 'roomType pricePerNight capacity')
+    .skip(skip)
+    .limit(limit)
     .sort({ createdAt: -1 });
 
   res.status(200).json({
     success: true,
     count: bookings.length,
+    pagination: {
+      total,
+      page,
+      limit,
+      pages: Math.ceil(total / limit) || 1,
+    },
     data: bookings,
   });
 });
